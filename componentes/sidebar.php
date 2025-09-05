@@ -25,7 +25,7 @@
                 <a href="#" class="nav-link text-white p-3 rounded-xl mb-2">
                     <i class="bi bi-graph-up me-2"></i> Reportes
                 </a>
-                <a href="logs.php" class="nav-link text-white p-3 rounded-xl mb-2">
+                <a href="auditoria.php" class="nav-link text-white p-3 rounded-xl mb-2">
                     <i class="bi bi-gear-fill me-2"></i> Configuración
                 </a>
             </div>
