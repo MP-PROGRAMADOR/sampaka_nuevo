@@ -333,7 +333,7 @@ CREATE TABLE logs (
     accion VARCHAR(100),
     descripcion TEXT,
     fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
-    ip_origen VARCHAR(45),
+    ip_origen text,
     dispositivo Text,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
