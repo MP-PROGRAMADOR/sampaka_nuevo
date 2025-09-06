@@ -274,6 +274,7 @@ include_once '../componentes/header.php';
     const nacionalidad = button.getAttribute('data-nacionalidad');
     const telefono = button.getAttribute('data-telefono');
     const ocupacion = button.getAttribute('data-ocupacion');
+    console.log(nombre + apellido);
 
     // Llenar campos del modal
     document.getElementById('id_paciente').value = id;
