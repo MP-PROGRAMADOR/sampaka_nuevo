@@ -67,6 +67,18 @@
 
     <!-- Chart.js -->
     <script src="../js/chart.js"></script>
+     <script>
+        // Espera 5 segundos antes de desaparecer
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.fade-msg');
+            alerts.forEach(alert => {
+                alert.classList.add('hide'); // aplica la clase fade out
+                // Remueve el elemento del DOM después de la transición
+                setTimeout(() => alert.remove(), 1000);
+            });
+        }, 5000);
+    </script>
+
 
 
 </body>

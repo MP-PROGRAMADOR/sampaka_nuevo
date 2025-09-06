@@ -37,7 +37,7 @@ try {
                    l.dispositivo
             FROM logs l
             LEFT JOIN usuarios u ON l.id_usuario = u.id_usuario
-            ORDER BY l.fecha_hora DESC";
+            ORDER BY l.fecha_hora  ASC";
     $stmt = $pdo->query($sql);
     $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
