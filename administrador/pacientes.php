@@ -63,7 +63,7 @@ include_once '../componentes/header.php';
                                     <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Apellido</th>
-                                     <th>codigo</th>
+                                    <th>codigo</th>
                                     <th>Sexo</th>
                                     <th>Nacionalidad</th>
                                     <th>Teléfono</th>
@@ -88,7 +88,8 @@ include_once '../componentes/header.php';
                                             <td>
                                                 <button
                                                     class="btn btn-sm btn-outline-primary me-2"
-                                                    onclick="editarPaciente(this)"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEditarPaciente"
                                                     data-id="<?= $p['id_paciente'] ?>"
                                                     data-nombre="<?= htmlspecialchars($p['nombre']) ?>"
                                                     data-apellido="<?= htmlspecialchars($p['apellido']) ?>"
@@ -98,6 +99,8 @@ include_once '../componentes/header.php';
                                                     data-ocupacion="<?= htmlspecialchars($p['ocupacion']) ?>">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>
+
+
 
                                                 <button class="btn btn-sm btn-outline-danger" onclick="eliminarPaciente(<?= $p['id_paciente'] ?>)">
                                                     <i class="bi bi-trash"></i>
@@ -211,86 +214,74 @@ include_once '../componentes/header.php';
 
 
     <!-- Modal para editar paciente -->
-  <!-- Modal para editar paciente -->
-<div class="modal fade" id="modalEditarPaciente" tabindex="-1" aria-labelledby="modalEditarPacienteLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content rounded-4 shadow">
+    <div class="modal fade" id="modalEditarPaciente" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="modalEditarPacienteLabel"><i class="bi bi-person-lines-fill me-2"></i>Editar Paciente</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editar Paciente</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
-      <form id="formEditarPaciente">
-        <div class="modal-body">
-            <input type="hidden" id="id_paciente" name="id_paciente">
+      <div class="modal-body">
+        <form id="formEditarPaciente">
+          <input type="hidden" id="id_paciente" name="id_paciente">
 
-            <div class="row g-3">
-              <div class="col-md-6 form-floating">
-                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required>
-                <label for="nombre"><i class="bi bi-person-fill me-1"></i>Nombre</label>
-              </div>
-              <div class="col-md-6 form-floating">
-                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido" required>
-                <label for="apellido"><i class="bi bi-person-fill me-1"></i>Apellido</label>
-              </div>
-              <div class="col-md-6 form-floating">
-                <select class="form-select" id="sexo" name="sexo" required>
-                  <option value="">Seleccione Sexo</option>
-                  <option value="M">Masculino</option>
-                  <option value="F">Femenino</option>
-                </select>
-                <label for="sexo"><i class="bi bi-gender-trans me-1"></i>Sexo</label>
-              </div>
-              <div class="col-md-6 form-floating">
-                <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" placeholder="Nacionalidad" required>
-                <label for="nacionalidad"><i class="bi bi-flag-fill me-1"></i>Nacionalidad</label>
-              </div>
-              <div class="col-md-6 form-floating">
-                <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Teléfono" required>
-                <label for="telefono"><i class="bi bi-telephone-fill me-1"></i>Teléfono</label>
-              </div>
-              <div class="col-md-6 form-floating">
-                <input type="text" class="form-control" id="ocupacion" name="ocupacion" placeholder="Ocupación" required>
-                <label for="ocupacion"><i class="bi bi-briefcase-fill me-1"></i>Ocupación</label>
-              </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" name="nombre">
             </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary rounded-pill"><i class="bi bi-save me-1"></i>Guardar Cambios</button>
-        </div>
-      </form>
+            <div class="col-md-6">
+              <label class="form-label">Apellido</label>
+              <input type="text" class="form-control" id="apellido" name="apellido">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Sexo</label>
+              <select class="form-select" id="sexo" name="sexo">
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nacionalidad</label>
+              <input type="text" class="form-control" id="nacionalidad" name="nacionalidad">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Teléfono</label>
+              <input type="text" class="form-control" id="telefono" name="telefono">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ocupación</label>
+              <input type="text" class="form-control" id="ocupacion" name="ocupacion">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" form="formEditarPaciente" class="btn btn-primary">Guardar Cambios</button>
+      </div>
     </div>
   </div>
 </div>
 
 
+
 <script>
-    function editarPaciente(button) {
-    // Obtener datos desde data-attributes
-    const id = button.getAttribute('data-id');
-    const nombre = button.getAttribute('data-nombre');
-    const apellido = button.getAttribute('data-apellido');
-    const sexo = button.getAttribute('data-sexo');
-    const nacionalidad = button.getAttribute('data-nacionalidad');
-    const telefono = button.getAttribute('data-telefono');
-    const ocupacion = button.getAttribute('data-ocupacion');
-    console.log(nombre + apellido);
+document.getElementById('modalEditarPaciente').addEventListener('show.bs.modal', function (event) {
+  const button = event.relatedTarget; // botón que abrió el modal
+  if (!button) return;
 
-    // Llenar campos del modal
-    document.getElementById('id_paciente').value = id;
-    document.getElementById('nombre').value = nombre;
-    document.getElementById('apellido').value = apellido;
-    document.getElementById('sexo').value = sexo;
-    document.getElementById('nacionalidad').value = nacionalidad;
-    document.getElementById('telefono').value = telefono;
-    document.getElementById('ocupacion').value = ocupacion;
-
-    // Abrir modal
-    const modal = new bootstrap.Modal(document.getElementById('modalEditarPaciente'));
-    modal.show();
-}
-
+  // Extraer atributos
+  document.getElementById('id_paciente').value   = button.getAttribute('data-id') || "";
+  document.getElementById('nombre').value       = button.getAttribute('data-nombre') || "";
+  document.getElementById('apellido').value     = button.getAttribute('data-apellido') || "";
+  document.getElementById('sexo').value         = button.getAttribute('data-sexo') || "";
+  document.getElementById('nacionalidad').value = button.getAttribute('data-nacionalidad') || "";
+  document.getElementById('telefono').value     = button.getAttribute('data-telefono') || "";
+  document.getElementById('ocupacion').value    = button.getAttribute('data-ocupacion') || "";
+});
 </script>
+
 
 
 

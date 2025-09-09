@@ -10,7 +10,7 @@
                 <a href="pacientes.php" class="nav-link text-white p-3 rounded-xl mb-2">
                     <i class="bi bi-person-fill me-2"></i> Pacientes
                 </a>
-                <a href="#" class="nav-link text-white p-3 rounded-xl mb-2">
+                <a href="consultas.php" class="nav-link text-white p-3 rounded-xl mb-2">
                     <i class="bi bi-file-earmark-medical me-2"></i> Consultas
                 </a>
                 <a href="#" class="nav-link text-white p-3 rounded-xl mb-2">
