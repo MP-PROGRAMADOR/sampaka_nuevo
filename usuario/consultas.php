@@ -1,109 +1,116 @@
-<?php
-include_once '../componentes/header.php';
-?>
+<?php include_once '../componentes/header_usuario.php';  ?>
 
 <body>
 
-    <div class="d-flex" id="wrapper">
-        <!-- Sidebar -->
+ 
 
-        <?php include_once '../componentes/sidebar.php'; ?>
 
-        <!-- Page Content -->
-        <div id="content" class="p-4 bg-gray-100 flex-grow">
-            <!-- Navbar -->
-            <?php
-            include_once '../componentes/barra_nav.php';
-            ?>
 
-            <?php if ($usuario_rol === 'Administrador'): ?>
-                <!-- Botón añadir paciente -->
-                <div class="d-flex justify-content-end mb-3">
-                    <button class="btn btn-primary btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#modalConsulta">
-                        <i class="bi bi-person-plus-fill me-2"></i> Añadir Nueva Consulta
-                    </button>
+
+
+<?php include_once '../componentes/slider_usuario.php';  ?>
+
+
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg bg-light rounded shadow-sm mb-4">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="bi bi-bell me-1"></i>Notificaciones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="bi bi-gear me-1"></i>Configuración</a>
+                        </li>
+                    </ul>
                 </div>
-            <?php endif; ?>
+            </div>
+        </nav>
 
-
-
-            <?php if ($usuario_rol !== 'Administrador'): ?>
-                <div class="d-flex justify-content-end mb-3">
-                    <button class="btn btn-primary btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#modalEvaluarPaciente">
-                        <i class="bi bi-person-plus-fill me-2"></i> Evaluar al Paciente
-                    </button>
+        <div class="row g-4 mb-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card stat-card p-3">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon me-3">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title text-muted mb-0">Pacientes</h5>
+                            <h2 class="card-subtitle mb-0 text-dark">1,250</h2>
+                        </div>
+                    </div>
                 </div>
-            <?php endif; ?>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card stat-card p-3">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon me-3">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title text-muted mb-0">Médicos</h5>
+                            <h2 class="card-subtitle mb-0 text-dark">50</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card stat-card p-3">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon me-3">
+                            <i class="bi bi-calendar-check-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title text-muted mb-0">Citas Hoy</h5>
+                            <h2 class="card-subtitle mb-0 text-dark">75</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card stat-card p-3">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="icon me-3">
+                            <i class="bi bi-box-seam-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title text-muted mb-0">Inventario</h5>
+                            <h2 class="card-subtitle mb-0 text-dark">2,100</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
-            <!-- Tabla de pacientes -->
-            <div class="card shadow-sm rounded-xl">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">Lista de Consultas</h5>
+        <!-- Tabla de pacientes -->
+        <div class="card shadow-sm rounded-xl">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Lista de Consultas</h5>
 
 
 
-                    <?php if (isset($_SESSION['success'])): ?>
-                        <div class="alert alert-success fade-msg"><?= $_SESSION['success']; ?></div>
-                        <?php unset($_SESSION['success']); ?>
-                    <?php endif; ?>
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="alert alert-success fade-msg"><?= $_SESSION['success']; ?></div>
+                    <?php unset($_SESSION['success']); ?>
+                <?php endif; ?>
 
-                    <?php if (isset($_SESSION['error'])): ?>
-                        <div class="alert alert-danger fade-msg"><?= $_SESSION['error']; ?></div>
-                        <?php unset($_SESSION['error']); ?>
-                    <?php endif; ?>
-
-
-
-                    <div class="table-responsive">
-                        <?php
-                        try {
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="alert alert-danger fade-msg"><?= $_SESSION['error']; ?></div>
+                    <?php unset($_SESSION['error']); ?>
+                <?php endif; ?>
 
 
-                            if (!$usuario_rol) {
-                                echo "<tr><td colspan='15' class='text-danger'>No tienes permisos para ver las consultas.</td></tr>";
-                                exit;
-                            }
+                
 
-                            if ($usuario_rol === "Administrador") {
-                                // Administrador ve todas las consultas
-                                $sql = "
-            SELECT 
-                c.id_consulta,
-                p.nombre AS paciente_nombre,
-                p.apellido AS paciente_apellido,
-                p.id_paciente AS id_paciente,
-                c.tipo_consulta,
-                c.motivo,
-                c.temperatura,
-                c.presion_arterial,
-                c.tension_arterial,
-                c.saturacion_oxigeno,
-                c.pulso,
-                c.peso,
-                c.talla,
-                c.IMC,
-                c.fecha_consulta,
-                c.pagado,
-                c.precio,
-                d.orina,
-                d.defeca,
-                d.horas_sueno,
-                d.antecedentes_familiares,
-                d.antecedentes_conyuge,
-                d.alergias,
-                d.operaciones,
-                d.transfuciones
-            FROM consultas c
-            INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
-            LEFT JOIN detalle_consulta d ON c.id_consulta = d.id_consulta
-            ORDER BY c.fecha_consulta DESC
-        ";
-                                $stmt = $pdo->query($sql);
-                            } else {
-                                // Filtrar por el rol del usuario
-                                $sql = "
-            SELECT 
+                <div class="table-responsive">
+                    <?php
+                    try {
+                        $stmt = $pdo->query("
+        SELECT 
     c.id_consulta,
     p.nombre AS paciente_nombre,
     p.apellido AS paciente_apellido,
@@ -132,139 +139,118 @@ include_once '../componentes/header.php';
 FROM consultas c
 INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
 LEFT JOIN detalle_consulta d ON c.id_consulta = d.id_consulta
-WHERE c.tipo_consulta = :rol
-  AND c.pagado = 1
-ORDER BY c.fecha_consulta DESC
-        ";
-                                $stmt = $pdo->prepare($sql);
-                                $stmt->execute([':rol' => $usuario_rol]);
-                            }
+ORDER BY c.fecha_consulta DESC;
 
-                            $consultas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        } catch (PDOException $e) {
-                            echo "<tr><td colspan='15'>Error al obtener consultas: " . $e->getMessage() . "</td></tr>";
-                            exit;
-                        }
-                        ?>
+    ");
+                        $consultas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    } catch (PDOException $e) {
+                        echo "<tr><td colspan='15'>Error al obtener consultas: " . $e->getMessage() . "</td></tr>";
+                        exit;
+                    }
+                    ?>
 
-
-                        <table id="tablaPacientes" class="table table-striped table-hover align-middle mb-0 nowrap" style="width:100%">
-                            <thead class="table-light">
+                    <table id="tablaPacientes" class="table table-striped table-hover align-middle mb-0 nowrap" style="width:100%">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Paciente</th>
+                                <th>Tipo</th>
+                                <th>Motivo</th>
+                                <th>Fecha</th>
+                                <th>Estado Pago</th>
+                                <th>Precio</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($consultas as $consulta): ?>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Paciente</th>
-                                    <th>Tipo</th>
-                                    <th>Motivo</th>
-                                    <th>Fecha</th>
-                                    <th>Estado Pago</th>
-                                    <th>Precio</th>
-                                    <th>Acciones</th>
+                                    <td><?= htmlspecialchars($consulta['id_consulta']) ?></td>
+                                    <td><?= htmlspecialchars($consulta['paciente_nombre'] . " " . $consulta['paciente_apellido']) ?>
+                                    </td>
+                                    <td><?= htmlspecialchars($consulta['tipo_consulta']) ?></td>
+                                    <td><?= htmlspecialchars($consulta['motivo']) ?></td>
+                                    <td><?= htmlspecialchars($consulta['fecha_consulta']) ?></td>
+
+                                    <td>
+                                        <?php if ($consulta['pagado']): ?>
+                                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Pagado</span>
+                                        <?php else: ?>
+                                            <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Pendiente</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>$<?= number_format($consulta['precio'], 2) ?></td>
+                                    <td>
+
+
+
+                                        <button class="btn btn-sm btn-info btn-ver-consulta" data-bs-toggle="modal"
+                                            data-bs-target="#modalVerConsulta" data-id="<?= $consulta['id_consulta'] ?>"
+                                            data-paciente="<?= htmlspecialchars($consulta['paciente_nombre'] . ' ' . $consulta['paciente_apellido']) ?>"
+                                            data-tipo="<?= htmlspecialchars($consulta['tipo_consulta']) ?>"
+                                            data-motivo="<?= htmlspecialchars($consulta['motivo']) ?>"
+                                            data-fecha="<?= $consulta['fecha_consulta'] ?>"
+                                            data-precio="<?= $consulta['precio'] ?>"
+                                            data-pagado="<?= $consulta['pagado'] ?>"
+                                            data-temperatura="<?= $consulta['temperatura'] ?>"
+                                            data-presion="<?= $consulta['presion_arterial'] ?>"
+                                            data-tension="<?= $consulta['tension_arterial'] ?>"
+                                            data-saturacion="<?= $consulta['saturacion_oxigeno'] ?>"
+                                            data-pulso="<?= $consulta['pulso'] ?>" data-peso="<?= $consulta['peso'] ?>"
+                                            data-talla="<?= $consulta['talla'] ?>" data-imc="<?= $consulta['IMC'] ?>"
+                                            data-orina="<?= htmlspecialchars($consulta['orina']) ?>"
+                                            data-defeca="<?= htmlspecialchars($consulta['defeca']) ?>"
+                                            data-horas_sueno="<?= $consulta['horas_sueno'] ?>"
+                                            data-transfusiones="<?= htmlspecialchars($consulta['transfuciones']) ?>"
+                                            data-antecedentes_familiares="<?= htmlspecialchars($consulta['antecedentes_familiares']) ?>"
+                                            data-antecedentes_conyuge="<?= htmlspecialchars($consulta['antecedentes_conyuge']) ?>"
+                                            data-alergias="<?= htmlspecialchars($consulta['alergias']) ?>"
+                                            data-operaciones="<?= htmlspecialchars($consulta['operaciones']) ?>">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+
+
+
+
+                                        <button class="btn btn-sm btn-primary btn-editar-consulta" data-bs-toggle="modal"
+                                            data-bs-target="#modalConsulta" data-id="<?= $consulta['id_paciente'] ?>"
+                                            data-id_consulta="<?= $consulta['id_consulta'] ?>"
+                                            data-paciente="<?= htmlspecialchars($consulta['paciente_nombre'] . ' ' . $consulta['paciente_apellido']) ?>"
+                                            data-tipo="<?= htmlspecialchars($consulta['tipo_consulta']) ?>"
+                                            data-motivo="<?= htmlspecialchars($consulta['motivo']) ?>"
+                                            data-temperatura="<?= $consulta['temperatura'] ?>"
+                                            data-presion="<?= htmlspecialchars($consulta['presion_arterial']) ?>"
+                                            data-tension="<?= htmlspecialchars($consulta['tension_arterial']) ?>"
+                                            data-saturacion="<?= $consulta['saturacion_oxigeno'] ?>"
+                                            data-pulso="<?= $consulta['pulso'] ?>" data-peso="<?= $consulta['peso'] ?>"
+                                            data-talla="<?= $consulta['talla'] ?>"
+                                            data-orina="<?= htmlspecialchars($consulta['orina']) ?>"
+                                            data-defeca="<?= htmlspecialchars($consulta['defeca']) ?>"
+                                            data-horas_sueno="<?= $consulta['horas_sueno'] ?>"
+                                            data-transfusiones="Valor de transfusiones"
+                                            data-antecedentes-familiares="Valor de familiares"
+                                            data-antecedentes-conyuge="Valor de conyuge" data-alergias="Valor de alergias"
+                                            data-operaciones="Valor de operaciones" data-precio="<?= $consulta['precio'] ?>"
+                                            data-pagado="<?= $consulta['pagado'] ?>">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+
+
+
+                                        <button class="btn btn-sm btn-danger" title="Eliminar"
+                                            onclick="eliminarConsulta(<?= $consulta['id_consulta'] ?>)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($consultas as $consulta): ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($consulta['id_consulta']) ?></td>
-                                        <td><?= htmlspecialchars($consulta['paciente_nombre'] . " " . $consulta['paciente_apellido']) ?>
-                                        </td>
-                                        <td><?= htmlspecialchars($consulta['tipo_consulta']) ?></td>
-                                        <td><?= htmlspecialchars($consulta['motivo']) ?></td>
-                                        <td><?= htmlspecialchars($consulta['fecha_consulta']) ?></td>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
 
-                                        <td>
-                                            <?php if ($consulta['pagado']): ?>
-                                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Pagado</span>
-                                            <?php else: ?>
-                                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Pendiente</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>XAF<?= number_format($consulta['precio'], 2) ?></td>
-                                        <td>
-
-
-
-                                            <button class="btn btn-sm btn-info btn-ver-consulta" data-bs-toggle="modal"
-                                                data-bs-target="#modalVerConsulta" data-id="<?= $consulta['id_consulta'] ?>"
-                                                data-paciente="<?= htmlspecialchars($consulta['paciente_nombre'] . ' ' . $consulta['paciente_apellido']) ?>"
-                                                data-tipo="<?= htmlspecialchars($consulta['tipo_consulta']) ?>"
-                                                data-motivo="<?= htmlspecialchars($consulta['motivo']) ?>"
-                                                data-fecha="<?= $consulta['fecha_consulta'] ?>"
-                                                data-precio="<?= $consulta['precio'] ?>"
-                                                data-pagado="<?= $consulta['pagado'] ?>"
-                                                data-temperatura="<?= $consulta['temperatura'] ?>"
-                                                data-presion="<?= $consulta['presion_arterial'] ?>"
-                                                data-tension="<?= $consulta['tension_arterial'] ?>"
-                                                data-saturacion="<?= $consulta['saturacion_oxigeno'] ?>"
-                                                data-pulso="<?= $consulta['pulso'] ?>" data-peso="<?= $consulta['peso'] ?>"
-                                                data-talla="<?= $consulta['talla'] ?>" data-imc="<?= $consulta['IMC'] ?>"
-                                                data-orina="<?= htmlspecialchars($consulta['orina']) ?>"
-                                                data-defeca="<?= htmlspecialchars($consulta['defeca']) ?>"
-                                                data-horas_sueno="<?= $consulta['horas_sueno'] ?>"
-                                                data-transfusiones="<?= htmlspecialchars($consulta['transfuciones']) ?>"
-                                                data-antecedentes_familiares="<?= htmlspecialchars($consulta['antecedentes_familiares']) ?>"
-                                                data-antecedentes_conyuge="<?= htmlspecialchars($consulta['antecedentes_conyuge']) ?>"
-                                                data-alergias="<?= htmlspecialchars($consulta['alergias']) ?>"
-                                                data-operaciones="<?= htmlspecialchars($consulta['operaciones']) ?>">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-
-
-
-
-                                            <button class="btn btn-sm btn-primary btn-editar-consulta" data-bs-toggle="modal"
-                                                data-bs-target="#modalConsulta" data-id="<?= $consulta['id_paciente'] ?>"
-                                                data-id_consulta="<?= $consulta['id_consulta'] ?>"
-                                                data-paciente="<?= htmlspecialchars($consulta['paciente_nombre'] . ' ' . $consulta['paciente_apellido']) ?>"
-                                                data-tipo="<?= htmlspecialchars($consulta['tipo_consulta']) ?>"
-                                                data-motivo="<?= htmlspecialchars($consulta['motivo']) ?>"
-                                                data-temperatura="<?= $consulta['temperatura'] ?>"
-                                                data-presion="<?= htmlspecialchars($consulta['presion_arterial']) ?>"
-                                                data-tension="<?= htmlspecialchars($consulta['tension_arterial']) ?>"
-                                                data-saturacion="<?= $consulta['saturacion_oxigeno'] ?>"
-                                                data-pulso="<?= $consulta['pulso'] ?>" data-peso="<?= $consulta['peso'] ?>"
-                                                data-talla="<?= $consulta['talla'] ?>"
-                                                data-orina="<?= htmlspecialchars($consulta['orina']) ?>"
-                                                data-defeca="<?= htmlspecialchars($consulta['defeca']) ?>"
-                                                data-horas_sueno="<?= $consulta['horas_sueno'] ?>"
-                                                data-transfusiones="Valor de transfusiones"
-                                                data-antecedentes-familiares="Valor de familiares"
-                                                data-antecedentes-conyuge="Valor de conyuge" data-alergias="Valor de alergias"
-                                                data-operaciones="Valor de operaciones" data-precio="<?= $consulta['precio'] ?>"
-                                                data-pagado="<?= $consulta['pagado'] ?>">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-
-
-
-                                            <?php if ($consulta['pagado'] == 0): ?>
-                                                <?php if ($usuario_rol === 'Administrador'): ?>
-                                                    <button class="btn btn-sm btn-success btn-pagar"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#modalPagar"
-                                                        data-id_consulta="<?= $consulta['id_consulta'] ?>"
-                                                        data-paciente="<?= htmlspecialchars($consulta['paciente_nombre'] . ' ' . $consulta['paciente_apellido']) ?>"
-                                                        data-precio="<?= $consulta['precio'] ?>">
-                                                        <i class="bi bi-cash-stack"></i> Pagar
-                                                    </button>
-                                                <?php else: ?>
-                                                    <span class="text-muted">
-                                                        <i class="bi bi-lock-fill"></i> Solo un administrador puede registrar el pago
-                                                    </span>
-                                                <?php endif; ?>
-                                            <?php endif; ?>
-
-
-
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
 
 
@@ -272,138 +258,6 @@ ORDER BY c.fecha_consulta DESC
 
 
 
-    <!-- Modal -->
-    <!-- Modal Evaluar Paciente -->
-<div class="modal fade" id="modalEvaluarPaciente" tabindex="-1" aria-labelledby="modalEvaluarPacienteLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content shadow-lg border-0 rounded-4">
-            
-            <!-- Encabezado del especialista -->
-            <div class="d-flex align-items-center justify-content-between px-4 py-2 bg-light border-bottom">
-                <div class="d-flex align-items-center">
-                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width:40px; height:40px;">
-                        <i class="bi bi-person-badge fs-5"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-0 fw-bold text-primary">
-                            <?php echo $usuario_nombre . " " . $usuario_apellidos; ?>
-                        </h6>
-                        <small class="text-muted">Especialista</small>
-                    </div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-
-            <!-- Header principal -->
-            <div class="modal-header bg-gradient-primary text-white">
-                <h5 class="modal-title" id="modalEvaluarPacienteLabel">
-                    <i class="bi bi-search me-2"></i> Evaluar Paciente
-                </h5>
-            </div>
-
-            <!-- Body -->
-            <div class="modal-body p-4">
-                <!-- Buscador de pacientes -->
-                <div class="mb-3">
-                    <input type="text" id="buscarConsulta" class="form-control form-control-lg shadow-sm" placeholder="Escribe nombre o apellido del paciente..." autofocus>
-                </div>
-
-                <!-- Resultados de pacientes -->
-                <div id="resultadosConsulta" class="list-group mb-3 shadow-sm rounded" style="max-height:200px; overflow-y:auto;"></div>
-
-                <!-- Consulta seleccionada -->
-                <div id="consultaSeleccionada" class="alert alert-success d-none rounded-3 d-flex justify-content-between align-items-center shadow-sm mb-3">
-                    <div>
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                        <span id="datosConsulta" class="fw-bold"></span>
-                    </div>
-                    <button type="button" class="btn btn-sm btn-outline-danger" id="btnQuitarSeleccion" title="Quitar paciente">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                    <input type="hidden" id="id_consulta_seleccionada">
-                    <input type="hidden" id="id_paciente_seleccionado">
-                </div>
-
-                <!-- Buscador de pruebas -->
-                <div class="mb-3">
-                    <input type="text" id="buscarPrueba" class="form-control form-control-sm shadow-sm" placeholder="Busca una prueba...">
-                </div>
-                <div id="resultadosPruebas" class="list-group mb-2 shadow-sm rounded" style="max-height:200px; overflow-y:auto;"></div>
-
-                <!-- Pruebas seleccionadas -->
-                <div id="pruebasSeleccionadasContainer" class="mb-4">
-                    <label class="form-label fw-bold">Pruebas seleccionadas:</label>
-                    <div id="pruebasSeleccionadas" class="d-flex flex-wrap gap-2 mb-3"></div>
-                    <input type="hidden" name="ids_pruebas" id="ids_pruebas">
-                </div>
-
-                <!-- Textareas adicionales -->
-                <div class="mb-3">
-                    <label for="historial_enfermedad" class="form-label fw-bold">Historial de enfermedad actual</label>
-                    <textarea id="historial_enfermedad" name="historial_enfermedad" rows="3" class="form-control shadow-sm" placeholder="Describe el historial de enfermedad actual..." required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="exploracion_fisica" class="form-label fw-bold">Exploración física</label>
-                    <textarea id="exploracion_fisica" name="exploracion_fisica" rows="3" class="form-control shadow-sm" placeholder="Describe la exploración física del paciente..." required></textarea>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">
-                    <i class="bi bi-x-circle me-1"></i> Cancelar
-                </button>
-                <button type="button" class="btn btn-primary btn-sm" id="btnConfirmarEvaluacion">
-                    <i class="bi bi-check-circle me-1"></i> Guardar Cambios
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-    <div class="modal fade" id="modalPagar" tabindex="-1" aria-labelledby="modalPagarLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-3 shadow-lg">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="modalPagarLabel">
-                        <i class="bi bi-cash-coin me-2"></i> Registrar Pago
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <form id="formPagar" method="POST" action="../php/procesar_pago_consulta.php">
-                    <div class="modal-body">
-                        <input type="hidden" name="id_consulta" id="pago_id_consulta">
-                        <div class="mb-3 text-center">
-                            <i class="bi bi-person-circle fs-1 text-secondary"></i>
-                            <h6 class="mt-2">Paciente: <span id="pago_paciente" class="fw-bold text-dark"></span></h6>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Cantidad a pagar</label>
-                            <input type="number" step="0.01" class="form-control" name="cantidad" id="pago_cantidad" required min="500">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Precio total de la consulta</label>
-                            <input type="text" class="form-control" id="pago_precio" disabled>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-circle me-1"></i> Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-success">
-                            <i class="bi bi-check-circle me-1"></i> Confirmar Pago
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
 
 
@@ -942,7 +796,7 @@ ORDER BY c.fecha_consulta DESC
                     <div class="card border-0 shadow-sm rounded-3">
                         <div class="card-body">
                             <h6 class="fw-bold text-primary"><i class="bi bi-cash-coin"></i> Pago</h6>
-                            <p><strong>Precio:</strong> XAF <span id="verPrecio"></span></p>
+                            <p><strong>Precio:</strong> $<span id="verPrecio"></span></p>
                             <p><strong>Estado:</strong>
                                 <span id="verPagado" class="badge fs-6 px-3 py-2"></span>
                             </p>
@@ -966,179 +820,6 @@ ORDER BY c.fecha_consulta DESC
 
 
 
-
-    <script>
-
-    </script>
-
-
-
-    <!-- Script AJAX -->
-    <script>
-       document.addEventListener('DOMContentLoaded', function() {
-    // ---- Pacientes ----
-    const inputBuscar = document.getElementById('buscarConsulta');
-    const resultados = document.getElementById('resultadosConsulta');
-    const seleccion = document.getElementById('consultaSeleccionada');
-    const datosConsulta = document.getElementById('datosConsulta');
-    const idConsultaSeleccionada = document.getElementById('id_consulta_seleccionada');
-    const idPacienteSeleccionado = document.getElementById('id_paciente_seleccionado');
-
-    inputBuscar.addEventListener('keyup', function() {
-        const query = this.value.trim();
-        if (query.length < 2) {
-            resultados.innerHTML = '';
-            return;
-        }
-        fetch('../php/buscar_consultas.php?q=' + encodeURIComponent(query))
-            .then(res => res.text())
-            .then(data => resultados.innerHTML = data);
-    });
-
-    resultados.addEventListener('click', function(e) {
-        if (e.target.classList.contains('seleccionar-consulta')) {
-            const btn = e.target;
-            const idC = btn.dataset.idConsulta;
-            const idP = btn.dataset.idPaciente;
-            const paciente = btn.dataset.paciente;
-            const fecha = btn.dataset.fecha;
-
-            idConsultaSeleccionada.value = idC;
-            idPacienteSeleccionado.value = idP;
-            datosConsulta.innerHTML = `<strong>${paciente}</strong> - <small>${fecha}</small>`;
-            seleccion.classList.remove('d-none');
-            resultados.scrollTop = resultados.scrollHeight;
-        }
-    });
-
-    document.getElementById('btnQuitarSeleccion').addEventListener('click', function() {
-        idConsultaSeleccionada.value = '';
-        idPacienteSeleccionado.value = '';
-        seleccion.classList.add('d-none');
-    });
-
-    // ---- Pruebas ----
-    const inputBuscarPrueba = document.getElementById('buscarPrueba');
-    const resultadosPruebas = document.getElementById('resultadosPruebas');
-    const pruebasSeleccionadas = document.getElementById('pruebasSeleccionadas');
-    const idsInput = document.getElementById('ids_pruebas');
-    let idsSeleccionados = [];
-
-    inputBuscarPrueba.addEventListener('keyup', function() {
-        const query = this.value.trim();
-        if (query.length < 2) {
-            resultadosPruebas.innerHTML = '';
-            return;
-        }
-
-        fetch('../php/buscar_pruebas.php?q=' + encodeURIComponent(query))
-            .then(res => res.text())
-            .then(data => resultadosPruebas.innerHTML = data);
-    });
-
-    resultadosPruebas.addEventListener('click', function(e) {
-        const btn = e.target.closest('.seleccionar-prueba');
-        if (!btn) return;
-
-        const id = btn.dataset.idPrueba;
-        const nombre = btn.dataset.nombrePrueba;
-
-        if (idsSeleccionados.includes(id)) return;
-
-        idsSeleccionados.push(id);
-        idsInput.value = idsSeleccionados.join(',');
-
-        const chip = document.createElement('div');
-        chip.className = 'badge bg-primary text-white px-2 py-1 shadow-sm rounded d-flex align-items-center prueba-seleccionada';
-        chip.dataset.idPrueba = id;
-        chip.innerHTML = `<span class="me-2">${nombre}</span>
-                          <button type="button" class="btn-close btn-close-white btn-sm p-1"></button>`;
-
-        chip.querySelector('button').addEventListener('click', function() {
-            const index = idsSeleccionados.indexOf(id);
-            if (index > -1) idsSeleccionados.splice(index, 1);
-            idsInput.value = idsSeleccionados.join(',');
-            chip.remove();
-        });
-
-        pruebasSeleccionadas.appendChild(chip);
-    });
-
-    // ---- Confirmar ----
-    document.getElementById('btnConfirmarEvaluacion').addEventListener('click', function() {
-        const idConsulta = idConsultaSeleccionada.value;
-        const idPaciente = idPacienteSeleccionado.value;
-        const historial = document.getElementById('historial_enfermedad').value.trim();
-        const exploracion = document.getElementById('exploracion_fisica').value.trim();
-
-        // IDs de pruebas
-        const pruebaElements = document.querySelectorAll('#pruebasSeleccionadas .prueba-seleccionada');
-        const idsPruebas = Array.from(pruebaElements).map(el => el.dataset.idPrueba);
-
-        // Validación
-        if (!idConsulta || !idPaciente) {
-            alert('Debes seleccionar una consulta y un paciente.');
-            return;
-        }
-        if (!historial) {
-            alert('Debes ingresar el historial de enfermedad actual.');
-            return;
-        }
-        if (!exploracion) {
-            alert('Debes ingresar la exploración física.');
-            return;
-        }
-        if (idsPruebas.length === 0) {
-            alert('Debes seleccionar al menos una prueba.');
-            return;
-        }
-
-        // Crear formulario y enviar POST
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '../php/guardar_evaluacion.php';
-
-        form.innerHTML = `
-            <input type="hidden" name="id_consulta" value="${idConsulta}">
-            <input type="hidden" name="id_paciente" value="${idPaciente}">
-            <input type="hidden" name="historial_enfermedad" value="${historial}">
-            <input type="hidden" name="exploracion_fisica" value="${exploracion}">
-        `;
-
-        idsPruebas.forEach(id => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'ids_pruebas[]';
-            input.value = id;
-            form.appendChild(input);
-        });
-
-        document.body.appendChild(form);
-        form.submit();
-    });
-});
-
-    </script>
-
-
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const modalPagar = document.getElementById("modalPagar");
-            modalPagar.addEventListener("show.bs.modal", function(event) {
-                let button = event.relatedTarget;
-
-                let idConsulta = button.getAttribute("data-id_consulta");
-                let paciente = button.getAttribute("data-paciente");
-                let precio = button.getAttribute("data-precio");
-
-                document.getElementById("pago_id_consulta").value = idConsulta;
-                document.getElementById("pago_paciente").innerText = paciente;
-                document.getElementById("pago_precio").value = precio;
-            });
-        });
-    </script>
 
 
     <script>
@@ -1307,7 +988,4 @@ ORDER BY c.fecha_consulta DESC
 
 
 
-
-    <?php
-    include_once '../componentes/footer.php';
-    ?>
+    <?php include_once '../componentes/footer_usuario.php'; ?>

@@ -16,8 +16,11 @@
                 <a href="#" class="nav-link text-white p-3 rounded-xl mb-2">
                     <i class="bi bi-bed-fill me-2"></i> Hospitalizaciones
                 </a>
-                <a href="#" class="nav-link text-white p-3 rounded-xl mb-2">
+                <a href="personal.php" class="nav-link text-white p-3 rounded-xl mb-2">
                     <i class="bi bi-person-badge-fill me-2"></i> Personal
+                </a>
+                <a href="usuarios.php" class="nav-link text-white p-3 rounded-xl mb-2">
+                    <i class="bi bi-person-badge-fill me-2"></i> usuarios
                 </a>
                 <a href="#" class="nav-link text-white p-3 rounded-xl mb-2">
                     <i class="bi bi-currency-dollar me-2"></i> Finanzas

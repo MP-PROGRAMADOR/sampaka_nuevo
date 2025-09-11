@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 rounded-xl shadow-sm">
     <div class="container-fluid">
-        <h1 class="text-xl md:text-2xl font-bold text-gray-800">Panel de Administración</h1>
+        <h1 class="text-xl md:text-2xl font-bold text-gray-800">Panel de <?php echo htmlspecialchars($usuario_rol); ?></h1>
         <div class="dropdown">
             <a class="d-flex align-items-center text-decoration-none dropdown-toggle text-gray-700" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-circle fs-3 me-2"></i>

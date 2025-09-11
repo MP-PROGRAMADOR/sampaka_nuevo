@@ -42,6 +42,10 @@ CREATE TABLE personal (
     cargo VARCHAR(100),
     telefono VARCHAR(20),
     correo VARCHAR(150),
+    direccion varchar(100),
+    nivel_estudios varchar(150),
+    nacionalidad varchar(150),
+    codigo varchar(100),
     FOREIGN KEY (id_hospital) REFERENCES hospitales(id_hospital)
 );
 
