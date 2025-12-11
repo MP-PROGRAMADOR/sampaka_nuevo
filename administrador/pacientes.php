@@ -1,59 +1,52 @@
 <?php
+// Iniciar la sesión si aún no está iniciada para manejar mensajes
+
 include_once '../componentes/header.php';
 ?>
 
 <body>
 
     <div class="d-flex" id="wrapper">
-        <!-- Sidebar -->
-
         <?php include_once '../componentes/sidebar.php'; ?>
 
-        <!-- Page Content -->
         <div id="content" class="p-4 bg-gray-100 flex-grow">
-            <!-- Navbar -->
             <?php
             include_once '../componentes/barra_nav.php';
             ?>
 
-            <!-- Botón añadir paciente -->
             <div class="d-flex justify-content-end mb-3">
                 <button class="btn btn-primary btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#modalRegistrarPaciente">
                     <i class="bi bi-person-plus-fill me-2"></i> Añadir Nuevo Paciente
                 </button>
             </div>
 
-            <!-- Tabla de pacientes -->
             <div class="card shadow-sm rounded-xl">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">Lista de Pacientes</h5>
-
-
+                    <h5 class="card-title mb-3 fw-bold"> Lista de Pacientes</h5>
 
                     <?php if (isset($_SESSION['success'])): ?>
-                        <div class="alert alert-success fade-msg"><?= $_SESSION['success']; ?></div>
+                        <div class="alert alert-success fade-msg"><?= htmlspecialchars($_SESSION['success']); ?></div>
                         <?php unset($_SESSION['success']); ?>
                     <?php endif; ?>
 
                     <?php if (isset($_SESSION['error'])): ?>
-                        <div class="alert alert-danger fade-msg"><?= $_SESSION['error']; ?></div>
+                        <div class="alert alert-danger fade-msg"><?= htmlspecialchars($_SESSION['error']); ?></div>
                         <?php unset($_SESSION['error']); ?>
                     <?php endif; ?>
-
-
-
                     <div class="table-responsive">
                         <?php
                         require_once "../config/conexion.php";
 
                         try {
+                            // Uso de prepared statements (aunque aquí es una consulta simple sin parámetros)
                             $stmt = $pdo->query("SELECT id_paciente, nombre, apellido, sexo, nacionalidad, telefono, ocupacion, fecha_registro, codigo 
-                         FROM pacientes 
-                         ORDER BY fecha_registro DESC");
+                                FROM pacientes 
+                                ORDER BY fecha_registro DESC");
                             $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         } catch (PDOException $e) {
-                            echo "<tr><td colspan='9' class='text-danger'>Error al cargar pacientes: " . $e->getMessage() . "</td></tr>";
-                            exit;
+                            // Mejorar manejo de errores para evitar exponer detalles sensibles al usuario
+                            echo "<div class='alert alert-danger'>Error al cargar pacientes: " . $e->getMessage() . "</div>";
+                            $pacientes = [];
                         }
                         ?>
 
@@ -63,7 +56,7 @@ include_once '../componentes/header.php';
                                     <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Apellido</th>
-                                    <th>codigo</th>
+                                    <th>Código</th>
                                     <th>Sexo</th>
                                     <th>Nacionalidad</th>
                                     <th>Teléfono</th>
@@ -86,23 +79,28 @@ include_once '../componentes/header.php';
                                             <td><?= htmlspecialchars($p['ocupacion']) ?></td>
                                             <td><?= htmlspecialchars($p['fecha_registro']) ?></td>
                                             <td>
+                                                <!-- Boton de Editar Paciente-->
                                                 <button
-                                                    class="btn btn-sm btn-outline-primary me-2"
+                                                    class="btn btn-sm btn-primary me-2"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalEditarPaciente"
-                                                    data-id="<?= $p['id_paciente'] ?>"
+                                                    data-id="<?= htmlspecialchars($p['id_paciente']) ?>"
                                                     data-nombre="<?= htmlspecialchars($p['nombre']) ?>"
                                                     data-apellido="<?= htmlspecialchars($p['apellido']) ?>"
-                                                    data-sexo="<?= $p['sexo'] ?>"
+                                                    data-sexo="<?= htmlspecialchars($p['sexo']) ?>"
                                                     data-nacionalidad="<?= htmlspecialchars($p['nacionalidad']) ?>"
                                                     data-telefono="<?= htmlspecialchars($p['telefono']) ?>"
                                                     data-ocupacion="<?= htmlspecialchars($p['ocupacion']) ?>">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </button>
 
-
-
-                                                <button class="btn btn-sm btn-outline-danger" onclick="eliminarPaciente(<?= $p['id_paciente'] ?>)">
+                                                <!-- Boton de Eliminar Paciente-->
+                                                <button
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalConfirmarEliminacion"
+                                                    data-id="<?= htmlspecialchars($p['id_paciente']) ?>"
+                                                    data-nombre-completo="<?= htmlspecialchars($p['nombre'] . ' ' . $p['apellido']) ?>">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </td>
@@ -110,7 +108,7 @@ include_once '../componentes/header.php';
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="9" class="text-center text-muted">No hay pacientes registrados</td>
+                                        <td colspan="10" class="text-center text-muted">No hay pacientes registrados</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -120,20 +118,15 @@ include_once '../componentes/header.php';
                 </div>
             </div>
         </div>
-
-
-
     </div>
 
-
-
-    <!-- Modal Registrar Paciente -->
+    <!-- Modal de Registrar Paciente-->
     <div class="modal fade" id="modalRegistrarPaciente" tabindex="-1" aria-labelledby="modalRegistrarPacienteLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow-lg border-0 rounded-3">
                 <div class="modal-header bg-primary text-white">
                     <i class="bi bi-person-plus-fill fs-4 me-2"></i>
-                    <h5 class="modal-title" id="modalRegistrarPacienteLabel">Registrar Nuevo Paciente</h5>
+                    <h5 class="modal-title" id="modalRegistrarPacienteLabel"> Registrar Nuevo Paciente</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <form id="formRegistrarPaciente" action="../php/registrar_paciente.php" method="POST" autocomplete="off">
@@ -213,76 +206,142 @@ include_once '../componentes/header.php';
     </div>
 
 
-    <!-- Modal para editar paciente -->
+    <!-- Modal de Editar Paciente-->
     <div class="modal fade" id="modalEditarPaciente" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editar Paciente</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formEditarPaciente">
-          <input type="hidden" id="id_paciente" name="id_paciente">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editar Paciente</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarPaciente" action="../php/actualizar_paciente.php" method="POST">
+                        <input type="hidden" id="edit_id_paciente" name="id_paciente">
 
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="nombre" name="nombre">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="edit_nombre" name="nombre">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Apellido</label>
+                                <input type="text" class="form-control" id="edit_apellido" name="apellido">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Sexo</label>
+                                <select class="form-select" id="edit_sexo" name="sexo">
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Nacionalidad</label>
+                                <input type="text" class="form-control" id="edit_nacionalidad" name="nacionalidad">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="edit_telefono" name="telefono">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Ocupación</label>
+                                <input type="text" class="form-control" id="edit_ocupacion" name="ocupacion">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="formEditarPaciente" class="btn btn-primary">Guardar Cambios</button>
+                </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Apellido</label>
-              <input type="text" class="form-control" id="apellido" name="apellido">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Sexo</label>
-              <select class="form-select" id="sexo" name="sexo">
-                <option value="M">Masculino</option>
-                <option value="F">Femenino</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Nacionalidad</label>
-              <input type="text" class="form-control" id="nacionalidad" name="nacionalidad">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Teléfono</label>
-              <input type="text" class="form-control" id="telefono" name="telefono">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Ocupación</label>
-              <input type="text" class="form-control" id="ocupacion" name="ocupacion">
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" form="formEditarPaciente" class="btn btn-primary">Guardar Cambios</button>
-      </div>
+        </div>
     </div>
-  </div>
-</div>
 
 
 
-<script>
-document.getElementById('modalEditarPaciente').addEventListener('show.bs.modal', function (event) {
-  const button = event.relatedTarget; // botón que abrió el modal
-  if (!button) return;
+    <script>
+        // Lógica para llenar los campos del modal de edición
+        document.getElementById('modalEditarPaciente').addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
 
-  // Extraer atributos
-  document.getElementById('id_paciente').value   = button.getAttribute('data-id') || "";
-  document.getElementById('nombre').value       = button.getAttribute('data-nombre') || "";
-  document.getElementById('apellido').value     = button.getAttribute('data-apellido') || "";
-  document.getElementById('sexo').value         = button.getAttribute('data-sexo') || "";
-  document.getElementById('nacionalidad').value = button.getAttribute('data-nacionalidad') || "";
-  document.getElementById('telefono').value     = button.getAttribute('data-telefono') || "";
-  document.getElementById('ocupacion').value    = button.getAttribute('data-ocupacion') || "";
-});
-</script>
+            if (!button) return;
+            // Extraer atributos y asignarlos a los campos con IDs únicos (edit)
+            document.getElementById('edit_id_paciente').value = button.getAttribute('data-id') || "";
+            document.getElementById('edit_nombre').value = button.getAttribute('data-nombre') || "";
+            document.getElementById('edit_apellido').value = button.getAttribute('data-apellido') || "";
+            document.getElementById('edit_sexo').value = button.getAttribute('data-sexo') || "";
+            document.getElementById('edit_nacionalidad').value = button.getAttribute('data-nacionalidad') || "";
+            document.getElementById('edit_telefono').value = button.getAttribute('data-telefono') || "";
+            document.getElementById('edit_ocupacion').value = button.getAttribute('data-ocupacion') || "";
+        });
+
+        // LÓGICA DEL NUEVO MODAL DE CONFIRMACIÓN DE ELIMINACIÓN
+        const modalEliminar = document.getElementById('modalConfirmarEliminacion');
+        const inputId = document.getElementById('idPacienteEliminar');
+        const h6Nombre = document.getElementById('nombrePacienteEliminar');
+        const btnConfirmar = document.getElementById('btnEliminarConfirmado');
+
+        // 1. Al abrir el modal, llenamos los datos del paciente
+        modalEliminar.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const pacienteId = button.getAttribute('data-id');
+            const pacienteNombre = button.getAttribute('data-nombre-completo');
+
+            // Mostrar el nombre del paciente y guardar el ID para la eliminación
+            inputId.value = pacienteId;
+            h6Nombre.textContent = pacienteNombre;
+        });
+
+        // 2. Al hacer clic en el botón de confirmación dentro del modal
+        btnConfirmar.addEventListener('click', function() {
+            const id = inputId.value;
+            if (id) {
+                const url = '../php/eliminar_paciente.php?id=' + id;
+                window.location.href = url;
+            }
+        });
+
+        // Lógica para el mensaje de fade-out (si es necesario para fade-msg)
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeMessages = document.querySelectorAll('.fade-msg');
+            fadeMessages.forEach(function(msg) {
+                setTimeout(function() {
+                    msg.style.transition = 'opacity 1s ease-out';
+                    msg.style.opacity = '0';
+                    setTimeout(function() {
+                        msg.remove();
+                    }, 1000);
+                }, 5000);
+            });
+        });
+    </script>
 
 
+    <!-- Modal Confirmar Eliminacion de Paciente-->
+    <div class="modal fade" id="modalConfirmarEliminacion" tabindex="-1" aria-labelledby="modalConfirmarEliminacionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalConfirmarEliminacionLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>¿Está seguro que desea eliminar al paciente:</p>
+                    <h6 class="fw-bold text-danger mb-3" id="nombrePacienteEliminar"></h6>
+                    <p class="text-muted small">Esta acción no se puede deshacer.</p>
+                    <input type="hidden" id="idPacienteEliminar">
+                </div>
+                <div class="modal-footer justify-content-center border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="btnEliminarConfirmado">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <?php

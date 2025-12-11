@@ -18,10 +18,10 @@ include_once '../componentes/header.php';
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div class="card card-custom p-4 bg-white">
                     <div class="flex items-center">
-                        <i class="bi bi-person-add text-blue-500 text-3xl me-3"></i>
+                        <i class="bi bi-person text-blue-500 text-3xl me-3"></i>
                         <div>
                             <h5 class="text-lg font-semibold text-gray-500">Pacientes Totales</h5>
-                            <p class="text-2xl font-bold" id="total-pacientes">0</p>
+                            <p class="text-2xl font-bold" id="total-pacientes"></p>
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@ include_once '../componentes/header.php';
                         <i class="bi bi-people-fill text-green-500 text-3xl me-3"></i>
                         <div>
                             <h5 class="text-lg font-semibold text-gray-500">Personal Médico</h5>
-                            <p class="text-2xl font-bold" id="total-personal">0</p>
+                            <p class="text-2xl font-bold" id="total-personal"></p>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@ include_once '../componentes/header.php';
                         <i class="bi bi-file-earmark-medical-fill text-yellow-500 text-3xl me-3"></i>
                         <div>
                             <h5 class="text-lg font-semibold text-gray-500">Consultas Recientes</h5>
-                            <p class="text-2xl font-bold" id="total-consultas">0</p>
+                            <p class="text-2xl font-bold" id="total-consultas"></p>
                         </div>
                     </div>
                 </div>
@@ -102,9 +102,8 @@ include_once '../componentes/header.php';
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        // ===============================
+       
         // Datos de muestra basados en el esquema de la base de datos
-        // ===============================
 
         const mockData = {
             pacientes: [
@@ -138,9 +137,9 @@ include_once '../componentes/header.php';
             }
         };
 
-        // ===============================
+       
         // Llenar métricas y tablas con datos de muestra
-        // ===============================
+    
 
         document.getElementById('total-pacientes').textContent = mockData.pacientes.length;
         document.getElementById('total-personal').textContent = mockData.personal.length;
@@ -166,9 +165,9 @@ include_once '../componentes/header.php';
             consultasTableBody.appendChild(row);
         });
 
-        // ===============================
+       
         // Configuración y renderizado de gráficos con Chart.js
-        // ===============================
+        
 
         // Gráfico de Pacientes por Nacionalidad
         const nacionalidadCounts = mockData.pacientes.reduce((acc, paciente) => {
