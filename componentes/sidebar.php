@@ -34,6 +34,16 @@
             <i class="bi bi-file-earmark-medical me-2"></i> Consultas
         </a>
 
+         <a href="../administrador/pruebas_hosptalarias.php" class="nav-link text-white 
+            <?php echo get_active_class('pruebas_hosptalarias', $current_page); ?> p-3 rounded-xl mb-2">
+            <i class="bi bi-file-earmark-medical me-2"></i> Pruebas Hospitalarias
+        </a>
+
+        <a href="usuarios.php" class="nav-link text-white 
+            <?php echo get_active_class('usuarios.php', $current_page); ?> p-3 rounded-xl mb-2">
+            <i class="bi bi-person-bounding-box"></i> Usuarios
+        </a>
+
         <a href="hospitalizaciones.php" class="nav-link text-white 
             <?php echo get_active_class('hospitalizaciones.php', $current_page); ?> p-3 rounded-xl mb-2">
             <i class="bi bi-bed-fill me-2"></i> Hospitalizaciones
