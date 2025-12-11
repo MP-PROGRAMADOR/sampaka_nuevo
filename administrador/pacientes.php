@@ -274,74 +274,62 @@ include_once '../componentes/header.php';
             document.getElementById('edit_telefono').value = button.getAttribute('data-telefono') || "";
             document.getElementById('edit_ocupacion').value = button.getAttribute('data-ocupacion') || "";
         });
+    </script>
 
-        // LÓGICA DEL NUEVO MODAL DE CONFIRMACIÓN DE ELIMINACIÓN
+
+<!-- Modal de Editar Paciente-->
+    <div class="modal fade" id="modalConfirmarEliminacion" tabindex="-1" aria-labelledby="modalConfirmarEliminacionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formEliminarPaciente" method="POST" action="../php/eliminar_paciente.php">
+
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="modalConfirmarEliminacionLabel">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+
+                    <div class="modal-body text-center">
+                        <p>¿Está seguro que desea eliminar al paciente:</p>
+                        <h6 class="fw-bold text-danger mb-3" id="nombrePacienteEliminar"></h6>
+                        <p class="text-muted small">Esta acción no se puede deshacer y el sistema evitará la eliminación si existe historial clínico asociado.</p>
+
+                        <input type="hidden" id="idPacienteEliminar" name="id">
+                    </div>
+
+                    <div class="modal-footer justify-content-center border-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-danger" id="btnEliminarConfirmado">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // LÓGICA DEL MODAL DE CONFIRMACIÓN 
         const modalEliminar = document.getElementById('modalConfirmarEliminacion');
         const inputId = document.getElementById('idPacienteEliminar');
         const h6Nombre = document.getElementById('nombrePacienteEliminar');
-        const btnConfirmar = document.getElementById('btnEliminarConfirmado');
 
-        // 1. Al abrir el modal, llenamos los datos del paciente
+        // Al abrir el modal, llenamos los datos del paciente desde el botón
         modalEliminar.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
             const pacienteId = button.getAttribute('data-id');
             const pacienteNombre = button.getAttribute('data-nombre-completo');
 
-            // Mostrar el nombre del paciente y guardar el ID para la eliminación
-            inputId.value = pacienteId;
             h6Nombre.textContent = pacienteNombre;
-        });
-
-        // 2. Al hacer clic en el botón de confirmación dentro del modal
-        btnConfirmar.addEventListener('click', function() {
-            const id = inputId.value;
-            if (id) {
-                const url = '../php/eliminar_paciente.php?id=' + id;
-                window.location.href = url;
-            }
-        });
-
-        // Lógica para el mensaje de fade-out (si es necesario para fade-msg)
-        document.addEventListener('DOMContentLoaded', function() {
-            const fadeMessages = document.querySelectorAll('.fade-msg');
-            fadeMessages.forEach(function(msg) {
-                setTimeout(function() {
-                    msg.style.transition = 'opacity 1s ease-out';
-                    msg.style.opacity = '0';
-                    setTimeout(function() {
-                        msg.remove();
-                    }, 1000);
-                }, 5000);
-            });
+            inputId.value = pacienteId;
         });
     </script>
 
 
-    <!-- Modal Confirmar Eliminacion de Paciente-->
-    <div class="modal fade" id="modalConfirmarEliminacion" tabindex="-1" aria-labelledby="modalConfirmarEliminacionLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="modalConfirmarEliminacionLabel"><i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p>¿Está seguro que desea eliminar al paciente:</p>
-                    <h6 class="fw-bold text-danger mb-3" id="nombrePacienteEliminar"></h6>
-                    <p class="text-muted small">Esta acción no se puede deshacer.</p>
-                    <input type="hidden" id="idPacienteEliminar">
-                </div>
-                <div class="modal-footer justify-content-center border-0">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle"></i> Cancelar
-                    </button>
-                    <button type="button" class="btn btn-danger" id="btnEliminarConfirmado">
-                        <i class="bi bi-trash"></i> Eliminar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 
     <?php
