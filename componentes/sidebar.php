@@ -54,10 +54,8 @@
             <i class="bi bi-people-fill me-2"></i> Personal
         </a>
 
-        <a href="usuarios.php" class="nav-link text-white 
-            <?php echo get_active_class('usuarios.php', $current_page); ?> p-3 rounded-xl mb-2">
-            <i class="bi bi-person-bounding-box"></i> Usuarios
-        </a>
+    
+        
 
         <a href="finanzas.php" class="nav-link text-white 
             <?php echo get_active_class('finanzas.php', $current_page); ?> p- rounded-xl mb-2">
