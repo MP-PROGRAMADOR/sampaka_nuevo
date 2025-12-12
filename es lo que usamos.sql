@@ -505,6 +505,7 @@ INSERT INTO `pruebas_medicas` (`id_prueba`, `nombre`, `precio`, `id_usuario`) VA
 CREATE TABLE `salas` (
   `id_sala` int(11) NOT NULL,
   `nombre` varchar(100) DEFAULT NULL,
+  `num_cama` int(2) DEFAULT NULL,
   `id_usuario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -39,6 +39,11 @@
             <i class="bi bi-file-earmark-medical me-2"></i> Pruebas Hospitalarias
         </a>
 
+        <a href="../administrador/salas_hospital.php" class="nav-link text-white 
+            <?php echo get_active_class('salas_hospital.php', $current_page); ?> p-3 rounded-xl mb-2">
+            <i class="bi bi-file-earmark-medical me-2"></i> Salas
+        </a>
+
         <a href="usuarios.php" class="nav-link text-white 
             <?php echo get_active_class('usuarios.php', $current_page); ?> p-3 rounded-xl mb-2">
             <i class="bi bi-person-bounding-box"></i> Usuarios
@@ -55,7 +60,7 @@
         </a>
 
     
-        
+
 
         <a href="finanzas.php" class="nav-link text-white 
             <?php echo get_active_class('finanzas.php', $current_page); ?> p- rounded-xl mb-2">
