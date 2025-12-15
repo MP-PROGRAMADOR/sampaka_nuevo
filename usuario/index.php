@@ -1,300 +1,273 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración Hospitalario</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <style>
-        body {
-            background-color: #f0f2f5;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #ffffff;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 1rem;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .navbar-brand {
-            font-weight: 700;
-        }
-        .nav-link {
-            font-weight: 500;
-            color: #495057;
-        }
-        .nav-link.active {
-            background-color: #0d6efd;
-            color: white;
-            border-radius: 5px;
-        }
-        .stat-card .icon {
-            font-size: 2rem;
-            color: #0d6efd;
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                box-shadow: none;
-            }
-            .main-content {
-                margin-left: 0;
-            }
-        }
-    </style>
-</head>
-<body>
+<?php
+// index.php
+session_start();
+// Asegúrate de que esta ruta sea correcta para tu conexión
+require_once "../config/conexion.php";
 
-<div class="sidebar d-flex flex-column p-3">
-    <a href="#" class="navbar-brand text-dark fs-4 mb-4 text-center">
-        <i class="bi bi-hospital me-2"></i>Admin Hospital
-    </a>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="#" class="nav-link active" aria-current="page">
-                <i class="bi bi-speedometer2 me-2"></i>
-                Dashboard
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="bi bi-people me-2"></i>
-                Pacientes
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="bi bi-person-fill-gear me-2"></i>
-                Médicos
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="bi bi-calendar-check me-2"></i>
-                Citas
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="bi bi-box-seam me-2"></i>
-                Inventario
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="bi bi-file-earmark-bar-graph me-2"></i>
-                Reportes
-            </a>
-        </li>
-    </ul>
-    <hr>
-    <div class="dropdown">
-        <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://via.placeholder.com/32" alt="mdo" width="32" height="32" class="rounded-circle me-2">
-            <strong>Admin</strong>
-        </a>
-        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" href="#">Perfil</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
-        </ul>
+// Variables para el header
+$page_title = 'Dashboard';
+$page_name = 'Dashboard';
+
+// Incluir el encabezado (abre HTML, Sidebar y .main-content)
+include 'header_doctores.php';
+?>
+
+<h1 class="mb-4 fw-light text-primary">👋 Hola, Dra. Ana Trini</h1>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6 col-lg-3">
+        <div class="card stat-card citas p-3">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-circle me-3">
+                    <i class="bi bi-calendar-check-fill"></i>
+                </div>
+                <div>
+                    <p class="card-title text-muted mb-0">Citas Hoy</p>
+                    <h3 class="card-subtitle mb-0 fw-bold">12</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card stat-card pacientes p-3">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-circle me-3">
+                    <i class="bi bi-folder-fill"></i>
+                </div>
+                <div>
+                    <p class="card-title text-muted mb-0">Pacientes Propios</p>
+                    <h3 class="card-subtitle mb-0 fw-bold">480</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card stat-card resultados p-3">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-circle me-3">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <div>
+                    <p class="card-title text-muted mb-0">Labs. Pendientes</p>
+                    <h3 class="card-subtitle mb-0 fw-bold text-warning">5</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="card stat-card pendientes p-3">
+            <div class="card-body d-flex align-items-center">
+                <div class="icon-circle me-3">
+                    <i class="bi bi-hospital-fill"></i>
+                </div>
+                <div>
+                    <p class="card-title text-muted mb-0">Hospitalizados</p>
+                    <h3 class="card-subtitle mb-0 fw-bold">3</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <h5 class="card-title text-primary"><i class="bi bi-clock-history me-1"></i> Próxima Cita</h5>
+            <ul class="list-group list-group-flush mt-3">
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-light rounded mb-2 border-0">
+                    <div>
+                        <span class="d-block fw-bold">Juan Pérez <small class="text-muted">(Pte #123)</small></span>
+                        <small class="text-secondary">Motivo: Control anual</small>
+                    </div>
+                    <span class="badge bg-success rounded-pill p-2 fs-6">10:00 AM</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-light rounded mb-2 border-0">
+                    <div>
+                        <span class="d-block fw-bold">María Gómez</span>
+                        <small class="text-secondary">Motivo: Resultados de Rx</small>
+                    </div>
+                    <span class="badge bg-primary rounded-pill p-2 fs-6">11:30 AM</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-light rounded mb-2 border-0">
+                    <div>
+                        <span class="d-block fw-bold">Luis Rodríguez</span>
+                        <small class="text-secondary">Motivo: Evaluación de fiebre</small>
+                    </div>
+                    <span class="badge bg-info text-dark rounded-pill p-2 fs-6">02:00 PM</span>
+                </li>
+            </ul>
+            <div class="mt-3 text-center">
+                <a href="mi_agenda.php" class="btn btn-sm btn-outline-primary"><i class="bi bi-calendar-event"></i> Ver Agenda Completa</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card p-4 h-100">
+            <h5 class="card-title text-primary"><i class="bi bi-graph-up me-1"></i> Resumen de Carga Mensual</h5>
+            <p class="text-muted">Distribución de consultas por día en el último mes.</p>
+            <div style="height: 300px;" class="p-3">
+                <canvas id="cargaMensualChart"></canvas>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="main-content">
-    <nav class="navbar navbar-expand-lg bg-light rounded shadow-sm mb-4">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-bell me-1"></i>Notificaciones</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-gear me-1"></i>Configuración</a>
-                    </li>
-                </ul>
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm p-4">
+            <div class="card-header bg-white border-0 ps-0">
+                <h5 class="card-title mb-0 text-danger"><i class="bi bi-exclamation-octagon-fill me-2"></i>Alertas y Resultados Críticos</h5>
             </div>
-        </div>
-    </nav>
-    
-    <div class="row g-4 mb-4">
-        <div class="col-md-6 col-lg-3">
-            <div class="card stat-card p-3">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon me-3">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title text-muted mb-0">Pacientes</h5>
-                        <h2 class="card-subtitle mb-0 text-dark">1,250</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card stat-card p-3">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon me-3">
-                        <i class="bi bi-person-fill"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title text-muted mb-0">Médicos</h5>
-                        <h2 class="card-subtitle mb-0 text-dark">50</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card stat-card p-3">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon me-3">
-                        <i class="bi bi-calendar-check-fill"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title text-muted mb-0">Citas Hoy</h5>
-                        <h2 class="card-subtitle mb-0 text-dark">75</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3">
-            <div class="card stat-card p-3">
-                <div class="card-body d-flex align-items-center">
-                    <div class="icon me-3">
-                        <i class="bi bi-box-seam-fill"></i>
-                    </div>
-                    <div>
-                        <h5 class="card-title text-muted mb-0">Inventario</h5>
-                        <h2 class="card-subtitle mb-0 text-dark">2,100</h2>
-                    </div>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr class="table-light">
+                            <th scope="col" class="text-secondary fw-normal">Paciente</th>
+                            <th scope="col" class="text-secondary fw-normal">Tipo</th>
+                            <th scope="col" class="text-secondary fw-normal">Fecha</th>
+                            <th scope="col" class="text-secondary fw-normal">Estado</th>
+                            <th scope="col" class="text-secondary fw-normal">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-danger">
+                            <td class="fw-bold">Sara Martínez</td>
+                            <td>Analítica de Sangre (Urgente)</td>
+                            <td>Hoy</td>
+                            <td><span class="badge rounded-pill bg-danger">Resultado Crítico</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalRevisarCritico">
+                                    <i class="bi bi-eye-fill me-1"></i>Revisar
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="table-warning">
+                            <td>Carlos Rivera</td>
+                            <td>Radiografía de Tórax</td>
+                            <td>11/09/2025</td>
+                            <td><span class="badge rounded-pill bg-warning text-dark">Pendiente Revisión</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-warning text-dark" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
+                                    <i class="bi bi-eye-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Laura Fernández</td>
+                            <td>ECG</td>
+                            <td>10/09/2025</td>
+                            <td><span class="badge rounded-pill bg-success">Revisado</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
+                                    <i class="bi bi-eye-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    
-    <div class="row g-4 mb-5">
-        <div class="col-md-8">
-            <div class="card p-4">
-                <h5 class="card-title">Resumen de Citas Mensuales</h5>
-                <p>Aquí puedes integrar un gráfico con una biblioteca como **Chart.js** o **ApexCharts**.</p>
-                <div style="height: 300px; background-color: #f8f9fa; border-radius: 8px;"></div>
+</div>
+
+<div class="modal fade" id="modalRevisarCritico" tabindex="-1" aria-labelledby="modalRevisarCriticoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalRevisarCriticoLabel"><i class="bi bi-lightning-fill me-2"></i>ALERTA CRÍTICA - Revisión Urgente</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card p-4">
-                <h5 class="card-title">Citas Próximas</h5>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="d-block fw-bold">Juan Pérez</span>
-                            <small class="text-muted">Cardiología</small>
-                        </div>
-                        <span class="badge bg-primary rounded-pill">10:00 AM</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="d-block fw-bold">María Gómez</span>
-                            <small class="text-muted">Pediatría</small>
-                        </div>
-                        <span class="badge bg-primary rounded-pill">11:30 AM</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <span class="d-block fw-bold">Luis Rodríguez</span>
-                            <small class="text-muted">Dermatología</small>
-                        </div>
-                        <span class="badge bg-primary rounded-pill">02:00 PM</span>
-                    </li>
-                </ul>
+            <div class="modal-body">
+                <p><strong>Paciente:</strong> Sara Martínez</p>
+                <p><strong>Examen:</strong> Analítica de Sangre (Urgente)</p>
+                <div class="alert alert-danger" role="alert">
+                    <p class="mb-0 fw-bold">Glucosa: 450 mg/dL (VALOR CRÍTICO: Alto)</p>
+                </div>
+                <p class="text-muted">Aquí se cargaría el PDF o el detalle estructurado del informe con todos los valores para su análisis inmediato.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-danger"><i class="bi bi-telephone-fill"></i> Contactar a Enfermería</button>
             </div>
         </div>
     </div>
+</div>
 
+<div class="modal fade" id="modalVerDetalle" tabindex="-1" aria-labelledby="modalVerDetalleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalVerDetalleLabel"><i class="bi bi-file-earmark-bar-graph me-2"></i> Detalle del Resultado (Radiografía de Tórax)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Paciente:</strong> Carlos Rivera</p>
+                <p class="text-muted">Contenido de la Radiografía de Tórax o del ECG. En un sistema real, se mostraría aquí la imagen o el visor DICOM (para Radiografías) o un informe detallado.</p>
 
- <!-- Tabla de últimas citas con diseño mejorado -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow-sm p-4">
-                    <div class="card-header bg-white border-0 ps-0">
-                        <h5 class="card-title mb-0">Últimas Citas Programadas</h5>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr class="table-light">
-                                    <th scope="col" class="text-secondary fw-normal">Paciente</th>
-                                    <th scope="col" class="text-secondary fw-normal">Médico</th>
-                                    <th scope="col" class="text-secondary fw-normal">Fecha</th>
-                                    <th scope="col" class="text-secondary fw-normal">Hora</th>
-                                    <th scope="col" class="text-secondary fw-normal">Estado</th>
-                                    <th scope="col" class="text-secondary fw-normal">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Juan Pérez</td>
-                                    <td>Dra. Ana Torres</td>
-                                    <td>12/09/2025</td>
-                                    <td>10:00 AM</td>
-                                    <td><span class="badge rounded-pill bg-success">Confirmada</span></td>
-                                    <td><button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td>María García</td>
-                                    <td>Dr. Luis Mendoza</td>
-                                    <td>12/09/2025</td>
-                                    <td>11:30 AM</td>
-                                    <td><span class="badge rounded-pill bg-warning text-dark">Pendiente</span></td>
-                                    <td><button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td>Carlos Rivera</td>
-                                    <td>Dra. Sofía Valdés</td>
-                                    <td>12/09/2025</td>
-                                    <td>02:00 PM</td>
-                                    <td><span class="badge rounded-pill bg-info text-dark">Reprogramada</span></td>
-                                    <td><button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button></td>
-                                </tr>
-                                <tr>
-                                    <td>Laura Fernández</td>
-                                    <td>Dr. Luis Mendoza</td>
-                                    <td>13/09/2025</td>
-                                    <td>09:00 AM</td>
-                                    <td><span class="badge rounded-pill bg-success">Confirmada</span></td>
-                                    <td><button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div style="height: 400px; background-color: #e9ecef; border-radius: 8px;" class="p-3 mt-3 d-flex align-items-center justify-content-center">
+                    <span class="text-muted">Espacio para la visualización del archivo o imagen médica.</span>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a href="historial_paciente.php?id=..." class="btn btn-primary">Ir al Historial del Paciente</a>
+            </div>
         </div>
-
-
+    </div>
 </div>
 
 
+<script>
+    // Datos estáticos para simular la carga mensual
+    const datosCarga = {
+        labels: ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5', 'Día 6', 'Día 7'],
+        datasets: [{
+            label: 'Consultas Realizadas',
+            data: [4, 6, 3, 7, 5, 8, 4], // Número de consultas por día
+            backgroundColor: 'rgba(13, 110, 253, 0.7)', // Color azul de Bootstrap
+            borderColor: 'rgba(13, 110, 253, 1)',
+            borderWidth: 1,
+            borderRadius: 5,
+        }]
+    };
+
+    const config = {
+        type: 'bar', // Tipo de gráfico: barras
+        data: datosCarga,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Permite que se adapte al div de 300px
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Nº Consultas'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false // Oculta la leyenda si solo hay un dataset
+                }
+            }
+        },
+    };
+
+    // Renderizar el gráfico
+    // Se usa DOMContentLoaded en lugar de window.onload para evitar conflictos con el include 'footer_doctores.php'
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('cargaMensualChart');
+        if (ctx) { // Asegurarse de que el elemento existe
+            new Chart(ctx, config);
+        }
+    });
+</script>
 
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php
+// Incluir el pie de página (cierra .main-content, body y html)
+include 'footer_doctores.php';
+?>

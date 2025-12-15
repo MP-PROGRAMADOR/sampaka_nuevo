@@ -2,13 +2,13 @@
 
 <body>
 
- 
 
 
 
 
 
-<?php include_once '../componentes/slider_usuario.php';  ?>
+
+    <?php include_once '../componentes/slider_usuario.php';  ?>
 
 
     <div class="main-content">
@@ -104,7 +104,7 @@
                 <?php endif; ?>
 
 
-                
+
 
                 <div class="table-responsive">
                     <?php
