@@ -44,6 +44,11 @@
             <i class="bi bi-file-earmark-medical me-2"></i> Salas
         </a>
 
+         <a href="../administrador/analiticas.php" class="nav-link text-white 
+            <?php echo get_active_class('analiticas.php', $current_page); ?> p-3 rounded-xl mb-2">
+            <i class="bi bi-file-earmark-medical me-2"></i> Analiticas
+        </a>
+
         <a href="usuarios.php" class="nav-link text-white 
             <?php echo get_active_class('usuarios.php', $current_page); ?> p-3 rounded-xl mb-2">
             <i class="bi bi-person-bounding-box"></i> Usuarios
