@@ -165,12 +165,14 @@ ORDER BY ult.ultima_consulta DESC;
 
         <table id="tablaPacientes" class="table table-striped table-hover align-middle mb-0 nowrap" style="width:100%">
             <thead>
+                <?php   $rol=$usuario_rol;   ?>
                 <tr class="table-primary">
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
                     <th>Última Consulta</th>
                     <th>Acciones</th>
+                    <th>  <?=    $rol;   ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -193,6 +195,8 @@ ORDER BY ult.ultima_consulta DESC;
                                     <span class="text-muted">N/A</span>
                                 <?php endif; ?>
                             </td>
+
+                           
 
                             <td class="d-flex">
 
