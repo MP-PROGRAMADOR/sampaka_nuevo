@@ -85,7 +85,6 @@ include_once '../componentes/header.php';
                                     <th>Paciente</th>
                                     <th>Código</th>
                                     <th>Pruebas</th>
-                                    <th>Resultados</th>
                                     <th>Estado</th>
                                     <th>Pagado</th>
                                     <th>Comentario</th>
@@ -105,9 +104,7 @@ include_once '../componentes/header.php';
                                                 <td>
                                                     <?php foreach ($analiticas_fecha as $a) echo htmlspecialchars($a['prueba_nombre']) . '<br>'; ?>
                                                 </td>
-                                                <td>
-                                                    <span class="badge bg-success">Resultados</span>
-                                                </td>
+                                               
                                                 <td>
                                                     <?php foreach ($analiticas_fecha as $a) echo htmlspecialchars($a['estado']) . '<br>'; ?>
                                                 </td>
@@ -165,6 +162,52 @@ include_once '../componentes/header.php';
             <i class="bi bi-cash"></i> Pagar
         </button>';
                                                     }
+
+
+
+
+
+
+
+                                                    // BOTÓN AÑADIR RESULTADOS (si alguna analítica no tiene resultado)
+                                                    $mostrar_add_resultados = false;
+                                                    foreach ($analiticas_fecha as $a) {
+                                                        if (empty($a['resultado'])) {
+                                                            $mostrar_add_resultados = true;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    if ($mostrar_add_resultados) {
+                                                        echo '
+    <button 
+        class="btn btn-sm btn-warning mb-1 btn-add-resultados"
+        data-paciente="' . htmlspecialchars(
+                                                            $analiticas_fecha[0]['paciente_nombre'] . ' ' .
+                                                                $analiticas_fecha[0]['paciente_apellido'],
+                                                            ENT_QUOTES
+                                                        ) . '"
+        data-id-paciente="' . (int)$analiticas_fecha[0]['id_paciente'] . '"
+        data-fecha="' . htmlspecialchars($fecha, ENT_QUOTES) . '"
+        data-analiticas=\'' . json_encode($analiticas_fecha, JSON_HEX_APOS | JSON_HEX_QUOT) . '\'
+    >
+        <i class="bi bi-plus-circle"></i> Añadir Resultados
+    </button>';
+                                                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                                                     // BOTÓN VER RESULTADOS (solo si todas tienen resultado)
                                                     $mostrar_resultados = true;
@@ -336,81 +379,133 @@ include_once '../componentes/header.php';
 
 
     <!-- modal de resultados -->
-   <div class="modal fade" id="modalResultados" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content border-0 shadow-lg rounded-4">
+    <div class="modal fade" id="modalResultados" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg rounded-4">
 
-            <!-- HEADER -->
-            <div class="modal-header bg-primary text-white rounded-top-4">
-                <div>
-                    <h5 class="modal-title fw-bold mb-0">
-                        <i class="bi bi-clipboard-data me-2"></i> Resultados de Analíticas
-                    </h5>
-                    <small class="opacity-75">Informe clínico del paciente</small>
+                <!-- HEADER -->
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0">
+                            <i class="bi bi-clipboard-data me-2"></i> Resultados de Analíticas
+                        </h5>
+                        <small class="opacity-75">Informe clínico del paciente</small>
+                    </div>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
 
-            <!-- BODY -->
-            <div class="modal-body p-4">
+                <!-- BODY -->
+                <div class="modal-body p-4">
 
-                <!-- INFO PACIENTE -->
-                <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center gap-2 mb-1">
-                                    <i class="bi bi-person-badge fs-5 text-primary"></i>
-                                    <span class="text-muted fw-semibold">Paciente</span>
+                    <!-- INFO PACIENTE -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <i class="bi bi-person-badge fs-5 text-primary"></i>
+                                        <span class="text-muted fw-semibold">Paciente</span>
+                                    </div>
+                                    <div class="fw-bold fs-6" id="resPaciente">—</div>
                                 </div>
-                                <div class="fw-bold fs-6" id="resPaciente">—</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <i class="bi bi-calendar-event fs-5 text-primary"></i>
+                                        <span class="text-muted fw-semibold">Fecha</span>
+                                    </div>
+                                    <div class="fw-bold fs-6" id="resFecha">—</div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center gap-2 mb-1">
-                                    <i class="bi bi-calendar-event fs-5 text-primary"></i>
-                                    <span class="text-muted fw-semibold">Fecha</span>
-                                </div>
-                                <div class="fw-bold fs-6" id="resFecha">—</div>
+                    <!-- TABLA RESULTADOS -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Prueba</th>
+                                            <th>Resultado</th>
+                                            <th>Valores Ref.</th>
+                                            <th>Comentario</th>
+                                            <th class="text-center">Archivo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resBody"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
-                <!-- TABLA RESULTADOS -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Prueba</th>
-                                        <th>Resultado</th>
-                                        <th>Valores Ref.</th>
-                                        <th>Comentario</th>
-                                        <th class="text-center">Archivo</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="resBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
+                <!-- FOOTER -->
+                <div class="modal-footer bg-light">
+                    <button class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Cerrar
+                    </button>
                 </div>
 
             </div>
-
-            <!-- FOOTER -->
-            <div class="modal-footer bg-light">
-                <button class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
-                    <i class="bi bi-x-circle"></i> Cerrar
-                </button>
-            </div>
-
         </div>
+    </div>
+
+
+
+
+  <!-- Modal para añadir resultados -->
+    <div class="modal fade" id="modalAddResultados" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <form method="POST" action="../php/procesar_resultados.php" enctype="multipart/form-data">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-plus-circle me-2"></i> Añadir Resultados de Analíticas
+                    </h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body p-4">
+                    <p><strong>Paciente:</strong> <span id="addResPaciente"></span></p>
+                    <p class="mb-3"><strong>Fecha:</strong> <span id="addResFecha"></span></p>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Prueba</th>
+                                    <th>Resultado</th>
+                                    <th>Valores Ref.</th>
+                                    <th>Archivo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="addResBody"></tbody>
+                        </table>
+                    </div>
+
+                    <input type="hidden" name="id_paciente" id="addResIdPaciente">
+                    <input type="hidden" name="fecha" id="addResFechaHidden">
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-save"></i> Guardar Resultados
+                    </button>
+                </div>
+
+            </div>
+        </form>
     </div>
 </div>
 
@@ -418,28 +513,82 @@ include_once '../componentes/header.php';
 
 
 
+<script>
+document.addEventListener('click', function (e) {
 
-   <script>
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.btn-resultados')) {
-        const btn = e.target.closest('.btn-resultados');
+    if (e.target.closest('.btn-add-resultados')) {
+
+        const btn = e.target.closest('.btn-add-resultados');
 
         const paciente = btn.dataset.paciente;
         const fecha = btn.dataset.fecha;
-        const resultados = JSON.parse(btn.dataset.resultados);
+        const analiticas = JSON.parse(btn.dataset.analiticas);
 
-        document.getElementById('resPaciente').textContent = paciente;
-        document.getElementById('resFecha').textContent = fecha;
+        document.getElementById('addResPaciente').textContent = paciente;
+        document.getElementById('addResFecha').textContent = fecha;
+        document.getElementById('addResIdPaciente').value = btn.dataset.idPaciente;
+        document.getElementById('addResFechaHidden').value = fecha;
 
-        const tbody = document.getElementById('resBody');
+        const tbody = document.getElementById('addResBody');
         tbody.innerHTML = '';
 
-        resultados.forEach(r => {
+        analiticas.forEach(a => {
 
-            let archivoHtml = '—';
+            // Solo mostrar las que NO tienen resultado
+            if (!a.resultado) {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            ${a.prueba_nombre}
+                            <input type="hidden" name="id_analitica[]" value="${a.id_analitica}">
+                        </td>
+                        <td>
+                            <input type="text" name="resultado[]" class="form-control" required>
+                        </td>
+                        <td>
+                            <input type="text" name="valores_referencia[]" class="form-control">
+                        </td>
+                        <td>
+                            <input type="file" name="archivo[]" class="form-control">
+                        </td>
+                    </tr>
+                `;
+            }
+        });
 
-            if (r.archivo && r.archivo !== '') {
-                archivoHtml = `
+        new bootstrap.Modal(document.getElementById('modalAddResultados')).show();
+    }
+});
+</script>
+
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-resultados')) {
+                const btn = e.target.closest('.btn-resultados');
+
+                const paciente = btn.dataset.paciente;
+                const fecha = btn.dataset.fecha;
+                const resultados = JSON.parse(btn.dataset.resultados);
+
+                document.getElementById('resPaciente').textContent = paciente;
+                document.getElementById('resFecha').textContent = fecha;
+
+                const tbody = document.getElementById('resBody');
+                tbody.innerHTML = '';
+
+                resultados.forEach(r => {
+
+                    let archivoHtml = '—';
+
+                    if (r.archivo && r.archivo !== '') {
+                        archivoHtml = `
                     <a href="../uploads/${r.archivo}" 
                        class="btn btn-sm btn-outline-primary"
                        target="_blank" 
@@ -447,9 +596,9 @@ document.addEventListener('click', function(e) {
                         <i class="bi bi-download"></i>
                     </a>
                 `;
-            }
+                    }
 
-            tbody.innerHTML += `
+                    tbody.innerHTML += `
                 <tr>
                     <td>${r.prueba_nombre}</td>
                     <td><strong>${r.resultado}</strong></td>
@@ -458,12 +607,12 @@ document.addEventListener('click', function(e) {
                     <td class="text-center">${archivoHtml}</td>
                 </tr>
             `;
-        });
+                });
 
-        new bootstrap.Modal(document.getElementById('modalResultados')).show();
-    }
-});
-</script>
+                new bootstrap.Modal(document.getElementById('modalResultados')).show();
+            }
+        });
+    </script>
 
 
 

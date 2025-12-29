@@ -1,4 +1,6 @@
 <?php
+require_once "../php/auth.php"; // conexión PDO
+
 // Variables para controlar el título de la página y el enlace activo
 if (!isset($page_title)) $page_title = "Panel Médico";
 if (!isset($page_name)) $page_name = "Dashboard";
