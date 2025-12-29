@@ -1,15 +1,15 @@
 <?php
 session_start();
 // Asegúrate de que esta ruta sea correcta para tu conexión
-require_once "../config/conexion.php"; 
+require_once "../config/conexion.php";
 
 // 1. Configuración para el header
 $page_title = 'Resultados de Laboratorio';
-$page_name = 'Resultados Labs'; 
+$page_name = 'Resultados Labs';
 
 // 2. Obtener el ID del doctor
 if (!isset($_SESSION['id_personal'])) {
-    $doctor_id = 1; 
+    $doctor_id = 1;
 } else {
     $doctor_id = $_SESSION['id_personal'];
 }
@@ -17,31 +17,32 @@ if (!isset($_SESSION['id_personal'])) {
 // =========================================================================
 // 3. LÓGICA PARA CARGAR RESULTADOS (Simulación)
 // =========================================================================
-function generar_resultados($estado) {
+function generar_resultados($estado)
+{
     $datos = [
         [
-            'id_paciente' => 101, 
-            'nombre' => 'Juan Pérez López', 
-            'fecha_toma' => '2025-12-14', 
-            'tipo' => 'Hemograma Completo', 
+            'id_paciente' => 101,
+            'nombre' => 'Juan Pérez López',
+            'fecha_toma' => '2025-12-14',
+            'tipo' => 'Hemograma Completo',
             'estado' => $estado,
             'anormalidad' => ($estado === 'Pendiente') ? 'CRÍTICO' : 'Normal',
             'clase_alerta' => ($estado === 'Pendiente') ? 'danger' : 'info'
         ],
         [
-            'id_paciente' => 102, 
-            'nombre' => 'Ana Torres García', 
-            'fecha_toma' => '2025-12-12', 
-            'tipo' => 'Química Sanguínea', 
+            'id_paciente' => 102,
+            'nombre' => 'Ana Torres García',
+            'fecha_toma' => '2025-12-12',
+            'tipo' => 'Química Sanguínea',
             'estado' => $estado,
             'anormalidad' => 'Normal',
             'clase_alerta' => 'success'
         ],
         [
-            'id_paciente' => 103, 
-            'nombre' => 'Luis Mena Diaz', 
-            'fecha_toma' => '2025-12-08', 
-            'tipo' => 'Perfil Lipídico', 
+            'id_paciente' => 103,
+            'nombre' => 'Luis Mena Diaz',
+            'fecha_toma' => '2025-12-08',
+            'tipo' => 'Perfil Lipídico',
             'estado' => $estado,
             'anormalidad' => 'FUERA DE RANGO',
             'clase_alerta' => 'warning'
@@ -51,20 +52,20 @@ function generar_resultados($estado) {
     if ($estado === 'Pendiente') {
         return $datos;
     } else {
-        return array_slice($datos, 1, 2); 
+        return array_slice($datos, 1, 2);
     }
 }
 
 $pendientes = generar_resultados('Pendiente');
 $revisados = generar_resultados('Revisado');
 
-include 'header_doctores.php'; 
+include 'header_doctores.php';
 ?>
 
 <h1 class="mb-4 fw-light text-primary"><i class="bi bi-file-medical-fill me-2"></i> Resultados de Laboratorio</h1>
 
 <div class="card shadow-sm p-4">
-    
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="card-title mb-0">Revisión de Informes</h5>
         <span class="text-muted small">Hoy: <?= date("d/m/Y") ?></span>
@@ -84,7 +85,7 @@ include 'header_doctores.php';
     </ul>
 
     <div class="tab-content" id="labsTabsContent">
-        
+
         <div class="tab-pane fade show active" id="pendientes" role="tabpanel">
             <?php if (empty($pendientes)): ?>
                 <div class="alert alert-success text-center mt-3">No hay resultados pendientes.</div>
@@ -110,7 +111,7 @@ include 'header_doctores.php';
                                         <span class="badge bg-<?= $res['clase_alerta'] ?>"><?= $res['anormalidad'] ?></span>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-primary btn-ver-informe" 
+                                        <button type="button" class="btn btn-sm btn-primary btn-ver-informe"
                                             data-bs-toggle="modal" data-bs-target="#modalVerInforme"
                                             data-nombre="<?= htmlspecialchars($res['nombre']) ?>"
                                             data-fecha="<?= date('d/m/Y', strtotime($res['fecha_toma'])) ?>"
@@ -119,7 +120,7 @@ include 'header_doctores.php';
                                             data-clase="<?= $res['clase_alerta'] ?>">
                                             <i class="bi bi-eye"></i> Ver Informe
                                         </button>
-                                        <button class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></button>
+                                        
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -149,7 +150,7 @@ include 'header_doctores.php';
                                 <td><?= htmlspecialchars($res['tipo']) ?></td>
                                 <td><span class="badge bg-success">Revisado</span></td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-secondary btn-ver-informe" 
+                                    <button type="button" class="btn btn-sm btn-secondary btn-ver-informe"
                                         data-bs-toggle="modal" data-bs-target="#modalVerInforme"
                                         data-nombre="<?= htmlspecialchars($res['nombre']) ?>"
                                         data-fecha="<?= date('d/m/Y', strtotime($res['fecha_toma'])) ?>"
@@ -221,21 +222,21 @@ include 'header_doctores.php';
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var modalVerInforme = document.getElementById('modalVerInforme');
-    modalVerInforme.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        
-        // Inyectar datos en el modal
-        modalVerInforme.querySelector('#modalNombrePaciente').textContent = button.getAttribute('data-nombre');
-        modalVerInforme.querySelector('#modalFechaToma').textContent = button.getAttribute('data-fecha');
-        modalVerInforme.querySelector('#modalTipoExamen').textContent = button.getAttribute('data-tipo');
-        
-        var badge = modalVerInforme.querySelector('#modalBadgeAnormalidad');
-        badge.textContent = button.getAttribute('data-anormalidad');
-        badge.className = 'badge bg-' + button.getAttribute('data-clase');
+    document.addEventListener('DOMContentLoaded', function() {
+        var modalVerInforme = document.getElementById('modalVerInforme');
+        modalVerInforme.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+
+            // Inyectar datos en el modal
+            modalVerInforme.querySelector('#modalNombrePaciente').textContent = button.getAttribute('data-nombre');
+            modalVerInforme.querySelector('#modalFechaToma').textContent = button.getAttribute('data-fecha');
+            modalVerInforme.querySelector('#modalTipoExamen').textContent = button.getAttribute('data-tipo');
+
+            var badge = modalVerInforme.querySelector('#modalBadgeAnormalidad');
+            badge.textContent = button.getAttribute('data-anormalidad');
+            badge.className = 'badge bg-' + button.getAttribute('data-clase');
+        });
     });
-});
 </script>
 
 <?php include 'footer_doctores.php'; ?>

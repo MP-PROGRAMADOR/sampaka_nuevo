@@ -101,6 +101,88 @@ if (!isset($page_name)) $page_name = "Dashboard";
             background-color: #dc3545;
         }
 
+        /* Efecto de desenfoque al fondo cuando el modal aparece */
+        .modal-backdrop.show {
+            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        #modalLogout .modal-content {
+            border-radius: 24px;
+            border: none;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Cabecera sutil */
+        #modalLogout .modal-header {
+            border: none;
+            padding-top: 1.5rem;
+        }
+
+        /* Contenedor del Icono con animación */
+        #modalLogout .icon-container {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            color: #e53e3e;
+            border-radius: 30px;
+            /* Estilo Squircle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            transform: rotate(-5deg);
+            transition: transform 0.3s ease;
+        }
+
+        #modalLogout:hover .icon-container {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        /* Tipografía */
+        #modalLogout .modal-title-custom {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        #modalLogout .modal-text-custom {
+            color: #718096;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+
+        /* Botones Modernos */
+        #modalLogout .btn-logout-confirm {
+            background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.2);
+        }
+
+        #modalLogout .btn-logout-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(229, 62, 62, 0.3);
+            color: white;
+        }
+
+        #modalLogout .btn-stay {
+            color: #a0aec0;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        #modalLogout .btn-stay:hover {
+            color: #4a5568;
+        }
+
         /* Responsive: Elimina el 'fixed' y el 'margin-left' en pantallas pequeñas */
         @media (max-width: 768px) {
             .sidebar {
@@ -163,12 +245,47 @@ if (!isset($page_name)) $page_name = "Dashboard";
             <strong>Dra. Ana Trini</strong>
         </a>
         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
+            <li><a class="dropdown-item" href="./perfil.php">Mi Perfil</a></li>
+            <li> <hr class="dropdown-divider"> </li>
             <li>
-                <hr class="dropdown-divider">
+                <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#modalLogout">
+                    <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+                </a>
             </li>
-            <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
         </ul>
+    </div>
+
+</div>
+
+
+<!-- modal de Cerrar Sesión -->
+<div class="modal fade" id="modalLogout" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" style="max-width: 350px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.8rem;"></button>
+            </div>
+
+            <div class="modal-body text-center pb-2">
+                <div class="icon-container">
+                    <i class="bi bi-door-open-fill"></i>
+                </div>
+
+                <h5 class="modal-title-custom">¿Finalizar Sesión?</h5>
+                <p class="modal-text-custom">
+                    Estás a punto de salir del sistema. Asegúrate de haber guardado tus cambios.
+                </p>
+            </div>
+
+            <div class="modal-footer border-0 p-4 pt-2 d-flex flex-column gap-2">
+                <a href="../php/cerrar_sesion.php" class="btn btn-logout-confirm w-100 py-2 shadow-sm">
+                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                </a>
+                <button type="button" class="btn btn-link btn-stay text-decoration-none small" data-bs-dismiss="modal">
+                    Seguir trabajando
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
