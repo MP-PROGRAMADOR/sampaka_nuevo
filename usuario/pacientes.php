@@ -79,7 +79,7 @@ include 'header_doctores.php';
                                 <a href="historial_clinico.php?id=<?= htmlspecialchars($paciente['id_paciente']) ?>" class="btn btn-sm btn-info me-2" title="Ver Historial">
                                     <i class="bi bi-person-lines-fill"></i> Historial
                                 </a>
-                                <a href="prescripciones.php?paciente_id=<?= htmlspecialchars($paciente['id_paciente']) ?>" class="btn btn-sm btn-primary me-2" title="Órdenes y Recetas">
+                                <a href="ver_tratamientos.php" class="btn btn-sm btn-primary me-2" title="Tratamientos">
                                     <i class="bi bi-receipt-cutoff"></i> Tratamientos
                                 </a>
                                 <button type="button" class="btn btn-sm btn-warning text-dark" 
@@ -126,8 +126,7 @@ include 'header_doctores.php';
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-warning text-dark"><i class="bi bi-check-lg"></i> Confirmar Cita</button>
+                    <button type="submit" class="btn btn-warning text-dark"><i class="bi bi-check-circle-fill me-1"></i> Guardar Cita</button>
                 </div>
             </form>
         </div>

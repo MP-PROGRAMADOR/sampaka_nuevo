@@ -1,22 +1,20 @@
 <?php
 session_start();
 // Asegúrate de que esta ruta sea correcta para tu conexión
-require_once "../config/conexion.php"; 
+require_once "../config/conexion.php";
 
 // 1. Configuración para el header (para marcar el enlace activo)
 $page_title = 'Mi Agenda';
-$page_name = 'Mi Agenda'; 
+$page_name = 'Mi Agenda';
 
 // 2. Obtener el ID del doctor
 if (!isset($_SESSION['id_personal'])) {
-    $doctor_id = 1; // ID de ejemplo, ¡ADAPTAR A LA LÓGICA DE SESIÓN REAL!
+    $doctor_id = 1;
 } else {
     $doctor_id = $_SESSION['id_personal'];
 }
 
-// =========================================================================
 // 3. LÓGICA PARA CARGAR CITAS (Simulación con datos estáticos)
-// =========================================================================
 
 // Citas para hoy
 $citas_hoy = [
@@ -34,13 +32,13 @@ $citas_proxima_semana = [
 ];
 
 // Incluir el encabezado (abre HTML, Sidebar y .main-content)
-include 'header_doctores.php'; 
+include 'header_doctores.php';
 ?>
 
 <h1 class="mb-4 fw-light text-primary"><i class="bi bi-calendar-range-fill me-2"></i> Mi Agenda</h1>
 
 <div class="card p-4">
-    
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="card-title mb-0">Gestión de Citas</h5>
         <a href="crear_cita.php" class="btn btn-success"><i class="bi bi-calendar-plus"></i> Añadir Cita</a>
@@ -65,7 +63,7 @@ include 'header_doctores.php';
     </ul>
 
     <div class="tab-content" id="agendaTabsContent">
-        
+
         <div class="tab-pane fade show active" id="hoy" role="tabpanel" aria-labelledby="hoy-tab">
             <?php if (empty($citas_hoy)): ?>
                 <div class="alert alert-info text-center mt-3" role="alert">
@@ -82,24 +80,24 @@ include 'header_doctores.php';
                             </div>
                             <div class="d-flex align-items-center">
                                 <span class="badge bg-<?= htmlspecialchars($cita['color']) ?> me-3"><?= htmlspecialchars($cita['estado']) ?></span>
-                                <a href="historial_paciente.php?id=<?= htmlspecialchars($cita['id']) ?>" class="btn btn-sm btn-outline-info me-2" title="Ver Historial">
+                                <a href="historial_clinico.php" class="btn btn-sm btn-info me-2" title="Ver Historial">
                                     <i class="bi bi-person-lines-fill"></i>
                                 </a>
-                                <button type="button" class="btn btn-sm btn-outline-secondary" title="Editar Cita" 
+                                <button type="button" class="btn btn-sm btn-warning" title="Editar Cita"
                                     data-bs-toggle="modal" data-bs-target="#modalEditarCita"
-                                    data-id="<?= htmlspecialchars($cita['id']) ?>" 
+                                    data-id="<?= htmlspecialchars($cita['id']) ?>"
                                     data-paciente="<?= htmlspecialchars($cita['paciente']) ?>"
                                     data-hora="<?= htmlspecialchars($cita['hora']) ?>"
                                     data-motivo="<?= htmlspecialchars($cita['motivo']) ?>">
-                                    <i class="bi bi-pencil"></i>
+                                    <i class="bi bi-pencil-square"></i>
                                 </button>
-                                </div>
+                            </div>
                         </li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
         </div>
-        
+
         <div class="tab-pane fade" id="semana" role="tabpanel" aria-labelledby="semana-tab">
             <div class="table-responsive">
                 <table class="table table-striped table-hover align-middle">
@@ -114,7 +112,9 @@ include 'header_doctores.php';
                     </thead>
                     <tbody>
                         <?php if (empty($citas_proxima_semana)): ?>
-                             <tr><td colspan="5" class="text-center text-muted">No hay citas programadas para la próxima semana.</td></tr>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No hay citas programadas para la próxima semana.</td>
+                            </tr>
                         <?php else: ?>
                             <?php foreach ($citas_proxima_semana as $cita): ?>
                                 <tr>
@@ -123,16 +123,16 @@ include 'header_doctores.php';
                                     <td><?= htmlspecialchars($cita['paciente']) ?></td>
                                     <td><?= htmlspecialchars($cita['motivo']) ?></td>
                                     <td>
-                                        <a href="historial_paciente.php?id=<?= htmlspecialchars($cita['id']) ?>" class="btn btn-sm btn-outline-info me-2" title="Ver Historial">
+                                        <a href="historial_clinico.php" class="btn btn-sm btn-outline-info me-2" title="Ver Historial">
                                             <i class="bi bi-person-lines-fill"></i>
                                         </a>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" title="Editar Cita" 
+                                        <button type="button" class="btn btn-warning btn-sm" title="Editar Cita"
                                             data-bs-toggle="modal" data-bs-target="#modalEditarCita"
-                                            data-id="<?= htmlspecialchars($cita['id']) ?>" 
+                                            data-id="<?= htmlspecialchars($cita['id']) ?>"
                                             data-paciente="<?= htmlspecialchars($cita['paciente']) ?>"
                                             data-hora="<?= htmlspecialchars($cita['hora']) ?>"
                                             data-motivo="<?= htmlspecialchars($cita['motivo']) ?>">
-                                            <i class="bi bi-pencil"></i>
+                                             <i class="bi bi-pencil-square"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -144,15 +144,15 @@ include 'header_doctores.php';
         </div>
 
         <div class="tab-pane fade" id="calendario" role="tabpanel" aria-labelledby="calendario-tab">
-             <div class="alert alert-info text-center mt-3" role="alert">
+            <div class="alert alert-info text-center mt-3" role="alert">
                 <i class="bi bi-graph-up-arrow me-2"></i> **Carga Semanal de Consultas:** Un resumen rápido de tu actividad.
             </div>
             <div style="height: 500px;" class="p-3">
                 <canvas id="cargaMensualChart"></canvas>
             </div>
-            
+
         </div>
-        
+
     </div>
 </div>
 
@@ -167,7 +167,7 @@ include 'header_doctores.php';
                 <div class="modal-body">
                     <input type="hidden" name="cita_id" id="editar_cita_id">
                     <p class="mb-3">Editando cita para: <strong id="editar_paciente_nombre"></strong></p>
-                    
+
                     <div class="mb-3">
                         <label for="editar_fecha" class="form-label">Fecha</label>
                         <input type="date" class="form-control" id="editar_fecha" name="fecha" required>
@@ -195,7 +195,7 @@ include 'header_doctores.php';
     document.addEventListener('DOMContentLoaded', function() {
         var modalEditarCita = document.getElementById('modalEditarCita');
         if (modalEditarCita) {
-            modalEditarCita.addEventListener('show.bs.modal', function (event) {
+            modalEditarCita.addEventListener('show.bs.modal', function(event) {
                 var button = event.relatedTarget;
                 var id = button.getAttribute('data-id');
                 var paciente = button.getAttribute('data-paciente');
@@ -206,36 +206,36 @@ include 'header_doctores.php';
                 var today = new Date().toISOString().split('T')[0];
                 document.getElementById('editar_cita_id').value = id;
                 document.getElementById('editar_paciente_nombre').textContent = paciente;
-                // En un entorno real, la fecha debería venir del dato, aquí usamos hoy como placeholder
-                document.getElementById('editar_fecha').value = today; 
+                document.getElementById('editar_fecha').value = today;
                 document.getElementById('editar_hora').value = hora;
                 document.getElementById('editar_motivo').value = motivo;
             });
         }
-        
+
         // 2. Lógica para inicializar el gráfico de Chart.js (Gráfico de Barras Mejorado)
         const ctx = document.getElementById('cargaMensualChart');
         if (ctx && typeof Chart !== 'undefined') {
             new Chart(ctx, {
-                type: 'bar', // Cambiado a gráfico de barras
+                type: 'bar',
                 data: {
                     labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
                     datasets: [{
-                        label: 'Citas Atendidas',
-                        data: [45, 52, 38, 61], // Datos de ejemplo
-                        backgroundColor: 'rgba(13, 110, 253, 0.8)', // Azul primario
-                        borderColor: 'rgba(13, 110, 253, 1)',
-                        borderWidth: 1,
-                        borderRadius: 5, // Bordes redondeados
-                    },
-                    {
-                        label: 'Citas Canceladas/No show',
-                        data: [5, 3, 7, 2], // Datos de ejemplo
-                        backgroundColor: 'rgba(255, 193, 7, 0.8)', // Amarillo warning
-                        borderColor: 'rgba(255, 193, 7, 1)',
-                        borderWidth: 1,
-                        borderRadius: 5,
-                    }]
+                            label: 'Citas Atendidas',
+                            data: [45, 52, 38, 61],
+                            backgroundColor: 'rgba(13, 110, 253, 0.8)',
+                            borderColor: 'rgba(13, 110, 253, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                        },
+                        {
+                            label: 'Citas Canceladas/No show',
+                            data: [5, 3, 7, 2],
+                            backgroundColor: 'rgba(255, 193, 7, 0.8)',
+                            borderColor: 'rgba(255, 193, 7, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -244,7 +244,7 @@ include 'header_doctores.php';
                         legend: {
                             position: 'top',
                             labels: {
-                                usePointStyle: true, // Usa cuadrados de color en la leyenda
+                                usePointStyle: true,
                             }
                         },
                         title: {
@@ -259,12 +259,12 @@ include 'header_doctores.php';
                     scales: {
                         x: {
                             grid: {
-                                display: false // Oculta las líneas verticales de la cuadrícula
+                                display: false
                             }
                         },
                         y: {
                             beginAtZero: true,
-                            max: 70, // Establece un máximo fijo para mejor comparación
+                            max: 70,
                             ticks: {
                                 stepSize: 10
                             },
@@ -282,5 +282,5 @@ include 'header_doctores.php';
 
 <?php
 // 4. Incluir el pie de página
-include 'footer_doctores.php'; 
+include 'footer_doctores.php';
 ?>

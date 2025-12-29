@@ -14,9 +14,7 @@ if (!isset($_SESSION['id_personal'])) {
     $doctor_id = $_SESSION['id_personal'];
 }
 
-// =========================================================================
 // 3. LÓGICA PARA CARGAR PRESCRIPCIONES (Simulación con datos estáticos)
-// =========================================================================
 
 // Ejemplo de las últimas 5 órdenes generadas por este doctor
 $prescripciones_recientes = [
@@ -24,7 +22,7 @@ $prescripciones_recientes = [
         'id_pres' => 501, 
         'fecha' => '2025-12-14', 
         'paciente' => 'Juan Pérez López', 
-        'paciente_id' => 101, // ID necesario para el historial
+        'paciente_id' => 101,
         'tipo' => 'Medicación', 
         'detalle' => 'Amoxicilina 500mg, cada 8 horas por 7 días. Tomar con alimentos.', 
         'estado' => 'Emitida',

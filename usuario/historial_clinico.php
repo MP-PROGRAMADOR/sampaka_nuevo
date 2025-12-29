@@ -6,16 +6,7 @@ require_once "../config/conexion.php";
 $page_title = 'Historial Clínico';
 $page_name = 'Historiales Clínicos';
 
-// 2. Obtener el ID del paciente desde la URL
 
-
-
-
-// =========================================================================
-// 3. LÓGICA PARA CARGAR DATOS DEL PACIENTE (Simulación)
-// En un entorno real, aquí se harían múltiples consultas a la base de datos
-// usando $paciente_id para llenar todas las secciones.
-// =========================================================================
 
 // Simulación de datos del paciente
 $paciente = [
@@ -68,9 +59,7 @@ include 'header_doctores.php';
     <a href="crear_consulta.php?paciente_id=<?= htmlspecialchars($paciente_id) ?>" class="btn btn-primary me-2">
         <i class="bi bi-journal-plus me-1"></i> Nueva Consulta
     </a>
-    <a href="crear_orden.php?paciente_id=<?= htmlspecialchars($paciente_id) ?>" class="btn btn-warning text-dark me-2">
-        <i class="bi bi-file-earmark-text me-1"></i> Crear Orden/Prescripción
-    </a>
+    
     <button class="btn btn-outline-secondary" onclick="window.print()">
         <i class="bi bi-printer me-1"></i> Imprimir Historial
     </button>
