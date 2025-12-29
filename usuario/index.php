@@ -98,7 +98,7 @@ include 'header_doctores.php';
                 </li>
             </ul>
             <div class="mt-3 text-center">
-                <a href="mi_agenda.php" class="btn btn-sm btn-outline-primary"><i class="bi bi-calendar-event"></i> Ver Agenda Completa</a>
+                <a href="agenda.php" class="btn btn-sm btn-outline-primary"><i class="bi bi-calendar-event"></i> Ver Agenda Completa</a>
             </div>
         </div>
     </div>
@@ -139,7 +139,7 @@ include 'header_doctores.php';
                             <td><span class="badge rounded-pill bg-danger">Resultado Crítico</span></td>
                             <td>
                                 <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalRevisarCritico">
-                                    <i class="bi bi-eye-fill me-1"></i>Revisar
+                                    <i class="bi bi-eye-fill me-1"></i>Detalle
                                 </button>
                             </td>
                         </tr>
@@ -150,7 +150,7 @@ include 'header_doctores.php';
                             <td><span class="badge rounded-pill bg-warning text-dark">Pendiente Revisión</span></td>
                             <td>
                                 <button class="btn btn-sm btn-outline-warning text-dark" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
-                                    <i class="bi bi-eye-fill"></i>
+                                    <i class="bi bi-eye-fill"></i> Detalle
                                 </button>
                             </td>
                         </tr>
@@ -160,8 +160,8 @@ include 'header_doctores.php';
                             <td>10/09/2025</td>
                             <td><span class="badge rounded-pill bg-success">Revisado</span></td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
-                                    <i class="bi bi-eye-fill"></i>
+                                <button class="btn btn-sm btn-outline-primary " data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
+                                    <i class="bi bi-eye-fill me-1"></i>Detalle
                                 </button>
                             </td>
                         </tr>
@@ -225,8 +225,8 @@ include 'header_doctores.php';
         labels: ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5', 'Día 6', 'Día 7'],
         datasets: [{
             label: 'Consultas Realizadas',
-            data: [4, 6, 3, 7, 5, 8, 4], // Número de consultas por día
-            backgroundColor: 'rgba(13, 110, 253, 0.7)', // Color azul de Bootstrap
+            data: [4, 6, 3, 7, 5, 8, 4], 
+            backgroundColor: 'rgba(13, 110, 253, 0.7)',
             borderColor: 'rgba(13, 110, 253, 1)',
             borderWidth: 1,
             borderRadius: 5,
@@ -234,11 +234,11 @@ include 'header_doctores.php';
     };
 
     const config = {
-        type: 'bar', // Tipo de gráfico: barras
+        type: 'bar', 
         data: datosCarga,
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Permite que se adapte al div de 300px
+            maintainAspectRatio: false, 
             scales: {
                 y: {
                     beginAtZero: true,
@@ -250,13 +250,13 @@ include 'header_doctores.php';
             },
             plugins: {
                 legend: {
-                    display: false // Oculta la leyenda si solo hay un dataset
+                    display: false 
                 }
             }
         },
     };
 
-    // Renderizar el gráfico
+    
     // Se usa DOMContentLoaded en lugar de window.onload para evitar conflictos con el include 'footer_doctores.php'
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('cargaMensualChart');
