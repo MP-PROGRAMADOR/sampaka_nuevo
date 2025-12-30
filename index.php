@@ -136,7 +136,7 @@
 
             <!-- Enlace para recuperar contraseña -->
             <div class="text-center mt-4">
-                <a href="#" class="text-decoration-none text-muted">¿Olvidaste tu contraseña?</a>
+                <a href="./php/olvide_password.php" class="text-decoration-none text-muted">¿Olvidaste tu contraseña?</a>
             </div>
         </div>
     </div>
