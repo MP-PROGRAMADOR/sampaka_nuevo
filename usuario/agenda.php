@@ -280,7 +280,3 @@ include 'header_doctores.php';
     });
 </script>
 
-<?php
-// 4. Incluir el pie de página
-include 'footer_doctores.php';
-?>

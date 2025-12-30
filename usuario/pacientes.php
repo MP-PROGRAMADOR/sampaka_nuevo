@@ -161,6 +161,5 @@ include 'header_doctores.php';
 
 <?php
 // 5. Incluir el pie de página (cierra .main-content, body y HTML)
-include 'footer_doctores.php'; 
+include '../componentes/footer_usuario.php'; 
 ?>
-</div>

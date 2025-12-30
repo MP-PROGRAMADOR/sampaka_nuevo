@@ -204,8 +204,3 @@ include 'header_doctores.php';
         </div>
     </div>
 <?php endforeach; ?>
-
-<?php
-// 5. Incluir el pie de página
-include 'footer_doctores.php'; 
-?>

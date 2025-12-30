@@ -238,5 +238,3 @@ include 'header_doctores.php';
         });
     });
 </script>
-
-<?php include 'footer_doctores.php'; ?>

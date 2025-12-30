@@ -266,8 +266,3 @@ include 'header_doctores.php';
     });
 </script>
 
-
-<?php
-// Incluir el pie de página (cierra .main-content, body y html)
-include 'footer_doctores.php';
-?>
