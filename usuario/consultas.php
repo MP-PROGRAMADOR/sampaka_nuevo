@@ -1,266 +1,144 @@
-<?php include_once '../componentes/header_usuario.php';  ?>
+<?php include_once '../componentes/header_usuario.php'; 
+
+$page_title = 'Consultas';
+$page_name = 'Consultas'; ?>
+
 
 <body>
-
-
-
-
-
 
 
     <?php include_once '../componentes/slider_usuario.php';  ?>
 
 
     <div class="main-content">
-        <nav class="navbar navbar-expand-lg bg-light rounded shadow-sm mb-4">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="bi bi-bell me-1"></i>Notificaciones</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="bi bi-gear me-1"></i>Configuración</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
 
-        <div class="row g-4 mb-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="card stat-card p-3">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="icon me-3">
-                            <i class="bi bi-people-fill"></i>
-                        </div>
-                        <div>
-                            <h5 class="card-title text-muted mb-0">Pacientes</h5>
-                            <h2 class="card-subtitle mb-0 text-dark">1,250</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card stat-card p-3">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="icon me-3">
-                            <i class="bi bi-person-fill"></i>
-                        </div>
-                        <div>
-                            <h5 class="card-title text-muted mb-0">Médicos</h5>
-                            <h2 class="card-subtitle mb-0 text-dark">50</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card stat-card p-3">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="icon me-3">
-                            <i class="bi bi-calendar-check-fill"></i>
-                        </div>
-                        <div>
-                            <h5 class="card-title text-muted mb-0">Citas Hoy</h5>
-                            <h2 class="card-subtitle mb-0 text-dark">75</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card stat-card p-3">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="icon me-3">
-                            <i class="bi bi-box-seam-fill"></i>
-                        </div>
-                        <div>
-                            <h5 class="card-title text-muted mb-0">Inventario</h5>
-                            <h2 class="card-subtitle mb-0 text-dark">2,100</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <h1 class="mb-4 fw-light text-primary"><i class="bi bi-file-earmark-medical me-2"></i> Mis Consultas</h1>
 
-
-        <!-- Tabla de pacientes -->
+        <!-- Tabla de Consultas -->
         <div class="card shadow-sm rounded-xl">
             <div class="card-body">
-                <h5 class="card-title mb-3">Lista de Consultas</h5>
-
-
-
-                <?php if (isset($_SESSION['success'])): ?>
-                    <div class="alert alert-success fade-msg"><?= $_SESSION['success']; ?></div>
-                    <?php unset($_SESSION['success']); ?>
-                <?php endif; ?>
-
-                <?php if (isset($_SESSION['error'])): ?>
-                    <div class="alert alert-danger fade-msg"><?= $_SESSION['error']; ?></div>
-                    <?php unset($_SESSION['error']); ?>
-                <?php endif; ?>
-
-
+                <h5 class="card-title mb-3 fw-bold">Lista de Consultas</h5>
 
 
                 <div class="table-responsive">
-                    <?php
-                    try {
-                        $stmt = $pdo->query("
-        SELECT 
-    c.id_consulta,
-    p.nombre AS paciente_nombre,
-    p.apellido AS paciente_apellido,
-    p.id_paciente AS id_paciente,
-    c.tipo_consulta,
-    c.motivo,
-    c.temperatura,
-    c.presion_arterial,
-    c.tension_arterial,
-    c.saturacion_oxigeno,
-    c.pulso,
-    c.peso,
-    c.talla,
-    c.IMC,
-    c.fecha_consulta,
-    c.pagado,
-    c.precio,
-    d.orina,
-    d.defeca,
-    d.horas_sueno,
-    d.antecedentes_familiares,
-    d.antecedentes_conyuge,
-    d.alergias,
-    d.operaciones,
-    d.transfuciones
-FROM consultas c
-INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
-LEFT JOIN detalle_consulta d ON c.id_consulta = d.id_consulta
-ORDER BY c.fecha_consulta DESC;
-
-    ");
-                        $consultas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    } catch (PDOException $e) {
-                        echo "<tr><td colspan='15'>Error al obtener consultas: " . $e->getMessage() . "</td></tr>";
-                        exit;
-                    }
-                    ?>
-
                     <table id="tablaPacientes" class="table table-striped table-hover align-middle mb-0 nowrap" style="width:100%">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
+                                <th class="text-center">ID</th>
                                 <th>Paciente</th>
                                 <th>Tipo</th>
                                 <th>Motivo</th>
                                 <th>Fecha</th>
-                                <th>Estado Pago</th>
+                                <th class="text-center">Estado Pago</th>
                                 <th>Precio</th>
-                                <th>Acciones</th>
+                                <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($consultas as $consulta): ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($consulta['id_consulta']) ?></td>
-                                    <td><?= htmlspecialchars($consulta['paciente_nombre'] . " " . $consulta['paciente_apellido']) ?>
-                                    </td>
-                                    <td><?= htmlspecialchars($consulta['tipo_consulta']) ?></td>
-                                    <td><?= htmlspecialchars($consulta['motivo']) ?></td>
-                                    <td><?= htmlspecialchars($consulta['fecha_consulta']) ?></td>
-
+                                    <td class="text-center fw-bold"><?= htmlspecialchars($consulta['id_consulta']) ?></td>
                                     <td>
+                                        <div class="d-flex flex-column">
+                                            <span><?= htmlspecialchars($consulta['paciente_nombre'] . " " . $consulta['paciente_apellido']) ?></span>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-muted small"><?= htmlspecialchars($consulta['tipo_consulta']) ?></span></td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 150px;"><?= htmlspecialchars($consulta['motivo']) ?></div>
+                                    </td>
+                                    <td><?= date('d/m/Y', strtotime($consulta['fecha_consulta'])) ?></td>
+                                    <td class="text-center">
                                         <?php if ($consulta['pagado']): ?>
-                                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Pagado</span>
+                                            <span class="badge rounded-pill bg-success-subtle text-success border border-success">
+                                                <i class="bi bi-check-circle me-1"></i> Pagado
+                                            </span>
                                         <?php else: ?>
-                                            <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Pendiente</span>
+                                            <span class="badge rounded-pill bg-danger-subtle text-danger border border-danger">
+                                                <i class="bi bi-x-circle me-1"></i> Pendiente
+                                            </span>
                                         <?php endif; ?>
                                     </td>
-                                    <td>$<?= number_format($consulta['precio'], 2) ?></td>
-                                    <td>
+                                    <td class="fw-semibold text-primary">$<?= number_format($consulta['precio'], 2) ?></td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-outline-info btn-sm btn-ver-consulta"
+                                                title="Ver Detalles"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalVerConsulta"
+                                                data-id="<?= $consulta['id_consulta'] ?>"
+                                                data-paciente="<?= htmlspecialchars($consulta['paciente_nombre'] . ' ' . $consulta['paciente_apellido']) ?>"
+                                                data-tipo="<?= htmlspecialchars($consulta['tipo_consulta']) ?>"
+                                                data-motivo="<?= htmlspecialchars($consulta['motivo']) ?>"
+                                                data-fecha="<?= $consulta['fecha_consulta'] ?>"
+                                                data-precio="<?= $consulta['precio'] ?>"
+                                                data-pagado="<?= $consulta['pagado'] ?>"
+                                                data-temperatura="<?= $consulta['temperatura'] ?>"
+                                                data-presion="<?= $consulta['presion_arterial'] ?>"
+                                                data-tension="<?= $consulta['tension_arterial'] ?>"
+                                                data-saturacion="<?= $consulta['saturacion_oxigeno'] ?>"
+                                                data-pulso="<?= $consulta['pulso'] ?>"
+                                                data-peso="<?= $consulta['peso'] ?>"
+                                                data-talla="<?= $consulta['talla'] ?>"
+                                                data-imc="<?= $consulta['IMC'] ?>"
+                                                data-orina="<?= htmlspecialchars($consulta['orina']) ?>"
+                                                data-defeca="<?= htmlspecialchars($consulta['defeca']) ?>"
+                                                data-horas_sueno="<?= $consulta['horas_sueno'] ?>"
+                                                data-transfusiones="<?= htmlspecialchars($consulta['transfuciones']) ?>"
+                                                data-antecedentes_familiares="<?= htmlspecialchars($consulta['antecedentes_familiares']) ?>"
+                                                data-antecedentes_conyuge="<?= htmlspecialchars($consulta['antecedentes_conyuge']) ?>"
+                                                data-alergias="<?= htmlspecialchars($consulta['alergias']) ?>"
+                                                data-operaciones="<?= htmlspecialchars($consulta['operaciones']) ?>">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
 
+                                            <button class="btn btn-outline-primary btn-sm btn-editar-consulta"
+                                                title="Editar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalConsulta"
+                                                data-id="<?= $consulta['id_paciente'] ?>"
+                                                data-id_consulta="<?= $consulta['id_consulta'] ?>"
+                                                data-paciente="<?= htmlspecialchars($consulta['paciente_nombre'] . ' ' . $consulta['paciente_apellido']) ?>"
+                                                data-tipo="<?= htmlspecialchars($consulta['tipo_consulta']) ?>"
+                                                data-motivo="<?= htmlspecialchars($consulta['motivo']) ?>"
+                                                data-temperatura="<?= $consulta['temperatura'] ?>"
+                                                data-presion="<?= htmlspecialchars($consulta['presion_arterial']) ?>"
+                                                data-tension="<?= htmlspecialchars($consulta['tension_arterial']) ?>"
+                                                data-saturacion="<?= $consulta['saturacion_oxigeno'] ?>"
+                                                data-pulso="<?= $consulta['pulso'] ?>"
+                                                data-peso="<?= $consulta['peso'] ?>"
+                                                data-talla="<?= $consulta['talla'] ?>"
+                                                data-orina="<?= htmlspecialchars($consulta['orina']) ?>"
+                                                data-defeca="<?= htmlspecialchars($consulta['defeca']) ?>"
+                                                data-horas_sueno="<?= $consulta['horas_sueno'] ?>"
+                                                data-transfusiones="<?= htmlspecialchars($consulta['transfuciones']) ?>"
+                                                data-antecedentes-familiares="<?= htmlspecialchars($consulta['antecedentes_familiares']) ?>"
+                                                data-antecedentes-conyuge="<?= htmlspecialchars($consulta['antecedentes_conyuge']) ?>"
+                                                data-alergias="<?= htmlspecialchars($consulta['alergias']) ?>"
+                                                data-operaciones="<?= htmlspecialchars($consulta['operaciones']) ?>"
+                                                data-precio="<?= $consulta['precio'] ?>"
+                                                data-pagado="<?= $consulta['pagado'] ?>">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
 
-
-                                        <button class="btn btn-sm btn-info btn-ver-consulta" data-bs-toggle="modal"
-                                            data-bs-target="#modalVerConsulta" data-id="<?= $consulta['id_consulta'] ?>"
-                                            data-paciente="<?= htmlspecialchars($consulta['paciente_nombre'] . ' ' . $consulta['paciente_apellido']) ?>"
-                                            data-tipo="<?= htmlspecialchars($consulta['tipo_consulta']) ?>"
-                                            data-motivo="<?= htmlspecialchars($consulta['motivo']) ?>"
-                                            data-fecha="<?= $consulta['fecha_consulta'] ?>"
-                                            data-precio="<?= $consulta['precio'] ?>"
-                                            data-pagado="<?= $consulta['pagado'] ?>"
-                                            data-temperatura="<?= $consulta['temperatura'] ?>"
-                                            data-presion="<?= $consulta['presion_arterial'] ?>"
-                                            data-tension="<?= $consulta['tension_arterial'] ?>"
-                                            data-saturacion="<?= $consulta['saturacion_oxigeno'] ?>"
-                                            data-pulso="<?= $consulta['pulso'] ?>" data-peso="<?= $consulta['peso'] ?>"
-                                            data-talla="<?= $consulta['talla'] ?>" data-imc="<?= $consulta['IMC'] ?>"
-                                            data-orina="<?= htmlspecialchars($consulta['orina']) ?>"
-                                            data-defeca="<?= htmlspecialchars($consulta['defeca']) ?>"
-                                            data-horas_sueno="<?= $consulta['horas_sueno'] ?>"
-                                            data-transfusiones="<?= htmlspecialchars($consulta['transfuciones']) ?>"
-                                            data-antecedentes_familiares="<?= htmlspecialchars($consulta['antecedentes_familiares']) ?>"
-                                            data-antecedentes_conyuge="<?= htmlspecialchars($consulta['antecedentes_conyuge']) ?>"
-                                            data-alergias="<?= htmlspecialchars($consulta['alergias']) ?>"
-                                            data-operaciones="<?= htmlspecialchars($consulta['operaciones']) ?>">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-
-
-
-
-                                        <button class="btn btn-sm btn-primary btn-editar-consulta" data-bs-toggle="modal"
-                                            data-bs-target="#modalConsulta" data-id="<?= $consulta['id_paciente'] ?>"
-                                            data-id_consulta="<?= $consulta['id_consulta'] ?>"
-                                            data-paciente="<?= htmlspecialchars($consulta['paciente_nombre'] . ' ' . $consulta['paciente_apellido']) ?>"
-                                            data-tipo="<?= htmlspecialchars($consulta['tipo_consulta']) ?>"
-                                            data-motivo="<?= htmlspecialchars($consulta['motivo']) ?>"
-                                            data-temperatura="<?= $consulta['temperatura'] ?>"
-                                            data-presion="<?= htmlspecialchars($consulta['presion_arterial']) ?>"
-                                            data-tension="<?= htmlspecialchars($consulta['tension_arterial']) ?>"
-                                            data-saturacion="<?= $consulta['saturacion_oxigeno'] ?>"
-                                            data-pulso="<?= $consulta['pulso'] ?>" data-peso="<?= $consulta['peso'] ?>"
-                                            data-talla="<?= $consulta['talla'] ?>"
-                                            data-orina="<?= htmlspecialchars($consulta['orina']) ?>"
-                                            data-defeca="<?= htmlspecialchars($consulta['defeca']) ?>"
-                                            data-horas_sueno="<?= $consulta['horas_sueno'] ?>"
-                                            data-transfusiones="Valor de transfusiones"
-                                            data-antecedentes-familiares="Valor de familiares"
-                                            data-antecedentes-conyuge="Valor de conyuge" data-alergias="Valor de alergias"
-                                            data-operaciones="Valor de operaciones" data-precio="<?= $consulta['precio'] ?>"
-                                            data-pagado="<?= $consulta['pagado'] ?>">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </button>
-
-
-
-                                        <button class="btn btn-sm btn-danger" title="Eliminar"
-                                            onclick="eliminarConsulta(<?= $consulta['id_consulta'] ?>)">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                            <button class="btn btn-outline-danger btn-sm"
+                                                title="Eliminar"
+                                                onclick="eliminarConsulta(<?= $consulta['id_consulta'] ?>)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
     </div>
 
 
-
     </div>
-
-
-
-
-
-
 
 
     <!-- Modal Registrar Paciente -->
@@ -497,221 +375,6 @@ ORDER BY c.fecha_consulta DESC;
     </div>
 
 
-    <!-- Modal para editar paciente -->
-    <div class="modal fade" id="modalConsulta" tabindex="-1" aria-labelledby="modalConsultaLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content shadow-lg border-0 rounded-3">
-
-                <!-- HEADER -->
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalConsultaLabel">
-                        <i class="bi bi-journal-medical me-2"></i> Nueva Consulta
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Cerrar"></button>
-                </div>
-
-                <!-- BODY -->
-                <div class="modal-body">
-                    <!-- BUSCADOR DE PACIENTE -->
-                    <div class="mb-3" id="buscadorPacienteContainer">
-                        <label for="buscarPaciente" class="form-label fw-bold">
-                            <i class="bi bi-search"></i> Buscar Paciente
-                        </label>
-                        <input type="text" class="form-control" id="buscarPaciente"
-                            placeholder="Escriba nombre, apellido o código...">
-                        <div id="resultadosPacientes" class="list-group mt-2"></div>
-                    </div>
-
-                    <!-- PACIENTE SELECCIONADO -->
-                    <div id="pacienteSeleccionado" class="alert alert-success fw-bold d-none"></div>
-
-                    <!-- FORMULARIO -->
-                    <form id="formConsulta" method="POST">
-                        <input type="hidden" id="idPaciente" name="id_paciente" required>
-
-                        <!-- NAV TABS -->
-                        <ul class="nav nav-tabs" id="consultaTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="datosConsulta-tab" data-bs-toggle="tab"
-                                    data-bs-target="#datosConsulta" type="button" role="tab">
-                                    <i class="bi bi-clipboard2-plus"></i> Datos de la Consulta
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="detalleConsulta-tab" data-bs-toggle="tab"
-                                    data-bs-target="#detalleConsulta" type="button" role="tab">
-                                    <i class="bi bi-file-medical"></i> Detalle de Consulta
-                                </button>
-                            </li>
-                        </ul>
-
-                        <!-- TAB CONTENT -->
-                        <div class="tab-content mt-3" id="consultaTabsContent">
-
-                            <!-- TAB CONSULTA -->
-                            <div class="tab-pane fade show active" id="datosConsulta" role="tabpanel">
-                                <div class="row g-3">
-
-                                    <!-- Tipo de Consulta -->
-                                    <div class="col-md-6">
-                                        <label for="tipoConsulta" class="form-label fw-bold">
-                                            <i class="bi bi-ui-checks-grid"></i> Tipo de Consulta
-                                        </label>
-                                        <select class="form-select" id="tipoConsulta" name="tipo_consulta" required>
-                                            <option value="">Seleccione...</option>
-                                            <option value="General">General</option>
-                                            <option value="Urgencias">Urgencias</option>
-                                            <option value="Gastroenterología">Gastroenterología</option>
-                                            <option value="Ginecología">Ginecología</option>
-                                            <option value="Pediatría">Pediatría</option>
-                                            <option value="Cardiología">Cardiología</option>
-                                            <option value="Dermatología">Dermatología</option>
-                                            <option value="Neurología">Neurología</option>
-                                            <option value="Traumatología">Traumatología</option>
-                                            <option value="Psiquiatría">Psiquiatría</option>
-                                            <option value="Oncología">Oncología</option>
-                                            <option value="Oftalmología">Oftalmología</option>
-                                            <option value="Otorrinolaringología">Otorrinolaringología</option>
-                                            <option value="Endocrinología">Endocrinología</option>
-                                            <option value="Neumología">Neumología</option>
-                                            <option value="Reumatología">Reumatología</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Motivo -->
-                                    <div class="col-12">
-                                        <label for="motivo" class="form-label fw-bold">
-                                            <i class="bi bi-chat-dots"></i> Motivo de la Consulta
-                                        </label>
-                                        <textarea class="form-control" id="motivo" name="motivo" rows="3"
-                                            required></textarea>
-                                    </div>
-
-                                    <!-- Signos vitales -->
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-thermometer-half"></i> Temperatura (°C)
-                                        </label>
-                                        <input type="number" step="0.01" class="form-control" name="temperatura"
-                                            required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-heart-pulse"></i> Presión Arterial
-                                        </label>
-                                        <input type="text" class="form-control" name="presion_arterial" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-heart"></i> Tensión Arterial
-                                        </label>
-                                        <input type="text" class="form-control" name="tension_arterial" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-activity"></i> Saturación O₂ (%)
-                                        </label>
-                                        <input type="number" step="0.01" class="form-control" name="saturacion_oxigeno"
-                                            required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-heart-fill"></i> Pulso
-                                        </label>
-                                        <input type="number" class="form-control" name="pulso" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-person-lines-fill"></i> Peso (kg)
-                                        </label>
-                                        <input type="number" step="0.01" class="form-control" name="peso" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-rulers"></i> Talla (cm)
-                                        </label>
-                                        <input type="number" step="0.01" class="form-control" name="talla" required>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <!-- TAB DETALLE CONSULTA -->
-                            <div class="tab-pane fade" id="detalleConsulta" role="tabpanel">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-droplet"></i> Orina
-                                        </label>
-                                        <input type="text" class="form-control" name="orina" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-bandaid"></i> Defeca
-                                        </label>
-                                        <input type="text" class="form-control" name="defeca" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-moon-stars"></i> Horas de Sueño
-                                        </label>
-                                        <input type="number" class="form-control" name="horas_sueno" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-droplet-half"></i> Transfusiones Sanguíneas
-                                        </label>
-                                        <textarea class="form-control" name="transfusiones_sanguineas" rows="2"
-                                            required></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-people"></i> Antecedentes Familiares
-                                        </label>
-                                        <textarea class="form-control" name="antecedentes_familiares" rows="2"
-                                            required></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-person-hearts"></i> Antecedentes Cónyuge
-                                        </label>
-                                        <textarea class="form-control" name="antecedentes_conyuge" rows="2"
-                                            required></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-exclamation-triangle"></i> Alergias
-                                        </label>
-                                        <textarea class="form-control" name="alergias" rows="2" required></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold">
-                                            <i class="bi bi-scissors"></i> Operaciones
-                                        </label>
-                                        <textarea class="form-control" name="operaciones" rows="2" required></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </form>
-                </div>
-
-                <!-- FOOTER -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-1"></i> Cerrar
-                    </button>
-                    <button type="submit" form="formConsulta" class="btn btn-primary">
-                        <i class="bi bi-save2 me-1"></i> Guardar Consulta
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
 
     <div class="modal fade" id="modalVerConsulta" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -814,11 +477,6 @@ ORDER BY c.fecha_consulta DESC;
             </div>
         </div>
     </div>
-
-
-
-
-
 
 
 

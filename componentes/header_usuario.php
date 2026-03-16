@@ -1,8 +1,11 @@
 <?php
 include_once '../config/conexion.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include_once '../php/auth.php';
-// Variables para controlar el título de la página y el enlace activo
+
+// Configuración de títulos por defecto
 if (!isset($page_title)) $page_title = "Panel Médico";
 if (!isset($page_name)) $page_name = "Dashboard";
 ?>
@@ -13,283 +16,192 @@ if (!isset($page_name)) $page_name = "Dashboard";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($page_title) ?> | Panel Hospitalario</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="../css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="../css/responsive.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 
     <style>
-        /* Estilos base */
-        body {
-            background-color: #f8f9fa;
+        :root {
+            --sidebar-bg: #0d2843;
+            --sidebar-hover: #123455;
+            --accent-color: #248ace;
+            --text-light: #c0cff0;
+            --sidebar-width: 280px;
+            --bg-body: #f8f9fa;
         }
 
+        /* --- BASE Y RENDIMIENTO --- */
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', sans-serif;
+            color: #34495e;
+            overflow-x: hidden;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* Bloqueo de conflictos de MDB con DataTables */
+        .dt-buttons .btn {
+            transform: none !important;
+            /* Evita el agrandamiento */
+            box-shadow: none !important;
+            /* Evita sombras raras al clickear */
+            transition: background 0.2s ease-in-out !important;
+        }
+
+        /* Evita que los iconos dentro de los botones se muevan */
+        .dt-buttons .btn i {
+            transform: none !important;
+            display: inline-block !important;
+        }
+
+        /* Corrección de la posición del dropdown de Columnas */
+        .buttons-columnVisibility {
+            padding: 10px 20px !important;
+        }
+
+        /* --- BLOQUEO ANTI-AGRANDAMIENTO (Consolidado) --- */
+        .btn,
+        .dt-button,
+        .buttons-html5,
+        .buttons-print,
+        .btn-primary,
+        .btn-floating,
+        [class*="btn-"],
+        .nav-link {
+            transform: none !important;
+            transition: background 0.15s ease-in-out, color 0.15s ease-in-out !important;
+            box-shadow: none !important;
+            animation: none !important;
+            scale: 1 !important;
+        }
+
+        .btn:hover,
+        .dt-button:hover,
+        [class*="btn-"]:hover,
+        .nav-link:hover {
+            transform: none !important;
+            scale: 1 !important;
+        }
+
+        /* Desactivar efectos de onda (Ripple) de MDB */
+        .ripple-surface,
+        .ripple-surface-primary {
+            position: static !important;
+        }
+
+        .btn i,
+        .nav-link i {
+            transform: none !important;
+            display: inline-block !important;
+        }
+
+        /* --- SIDEBAR --- */
         .sidebar {
-            width: 250px;
-            background-color: #0d6efd;
-            /* ... otros estilos de color ... */
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
             height: 100vh;
             position: fixed;
-            /* <-- CLAVE 1: Fija la barra a la izquierda */
             top: 0;
             left: 0;
-            padding-top: 1rem;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-            z-index: 1000;
+            z-index: 1050;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
         }
 
-        .main-content {
-            /* <-- CLAVE 2: Mueve el contenido 250px a la derecha para evitar superposición */
-            margin-left: 250px;
-            padding: 20px;
-        }
-
-        /* ... Estilos de enlaces, tarjetas, iconos, etc. ... */
-
-        .sidebar .navbar-brand {
-            color: white !important;
+        .sidebar-heading {
+            background-color: #0c233a;
+            padding: 24px 20px;
+            font-size: 1.3rem;
             font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-heading i {
+            color: var(--accent-color);
+            margin-right: 12px;
         }
 
         .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.7);
-            padding: 10px 15px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            color: var(--text-light);
+            margin: 4px 15px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
         }
 
-        .sidebar .nav-link:hover {
+        .sidebar .nav-link:hover:not(.active) {
+            background-color: var(--sidebar-hover);
             color: white;
-            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 23px !important;
+            /* Pequeño desplazamiento lateral en lugar de agrandar */
         }
 
         .sidebar .nav-link.active {
-            background-color: white;
-            color: #0d6efd;
-            font-weight: 600;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: var(--accent-color) !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+            border-left: 4px solid white;
         }
 
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-        }
-
-        .stat-card .icon-circle {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        .stat-card.citas .icon-circle {
-            background-color: #198754;
-        }
-
-        .stat-card.pacientes .icon-circle {
-            background-color: #0d6efd;
-        }
-
-        .stat-card.resultados .icon-circle {
-            background-color: #ffc107;
-        }
-
-        .stat-card.pendientes .icon-circle {
-            background-color: #dc3545;
-        }
-
-        /* Efecto de desenfoque al fondo cuando el modal aparece */
-        .modal-backdrop.show {
-            backdrop-filter: blur(4px);
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        #modalLogout .modal-content {
-            border-radius: 24px;
-            border: none;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        /* Cabecera sutil */
-        #modalLogout .modal-header {
-            border: none;
-            padding-top: 1.5rem;
-        }
-
-        /* Contenedor del Icono con animación */
-        #modalLogout .icon-container {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
-            color: #e53e3e;
-            border-radius: 30px;
-            /* Estilo Squircle */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            transform: rotate(-5deg);
-            transition: transform 0.3s ease;
-        }
-
-        #modalLogout:hover .icon-container {
-            transform: rotate(0deg) scale(1.05);
-        }
-
-        /* Tipografía */
-        #modalLogout .modal-title-custom {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 0.5rem;
-        }
-
-        #modalLogout .modal-text-custom {
-            color: #718096;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            padding: 0 10px;
-        }
-
-        /* Botones Modernos */
-        #modalLogout .btn-logout-confirm {
-            background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
-            border: none;
-            color: white;
-            padding: 12px;
-            border-radius: 15px;
-            font-weight: 600;
+        /* --- CONTENIDO PRINCIPAL --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 35px;
+            min-height: 100vh;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.2);
+            contain: content;
         }
 
-        #modalLogout .btn-logout-confirm:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(229, 62, 62, 0.3);
-            color: white;
+        /* --- DATA TABLES CUSTOM --- */
+        .dataTables_wrapper .dataTables_length select,
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 4px 8px;
         }
 
-        #modalLogout .btn-stay {
-            color: #a0aec0;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        #modalLogout .btn-stay:hover {
-            color: #4a5568;
-        }
-
-        /* Responsive: Elimina el 'fixed' y el 'margin-left' en pantallas pequeñas */
-        @media (max-width: 768px) {
+        /* --- RESPONSIVE --- */
+        @media (max-width: 992px) {
             .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                /* Ya no es fijo */
-                box-shadow: none;
+                transform: translateX(-100%);
             }
 
             .main-content {
                 margin-left: 0;
-                /* Vuelve a su lugar */
+                padding: 20px;
             }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+        }
+
+        /* Modals */
+        .modal-backdrop.show {
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            border-radius: 18px;
+            border: none;
+            overflow: hidden;
         }
     </style>
 </head>
-
-
-<div class="sidebar d-flex flex-column p-3">
-    <a href="index.php" class="navbar-brand fs-4 mb-4 text-center">
-        <i class="bi bi-clipboard-pulse"></i> Panel Médico
-    </a>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="index.php" class="nav-link <?= ($page_name == 'Dashboard') ? 'active' : '' ?>" aria-current="page">
-                <i class="bi bi-house-door-fill me-2"></i> Dashboard
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="pacientes.php" class="nav-link <?= ($page_name == 'Mis Pacientes') ? 'active' : '' ?>">
-                <i class="bi bi-people-fill me-2"></i> Mis Pacientes
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="agenda.php" class="nav-link <?= ($page_name == 'Mi Agenda') ? 'active' : '' ?>">
-                <i class="bi bi-calendar-range-fill me-2"></i> Mi Agenda
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="tratamientos.php" class="nav-link <?= ($page_name == 'Prescripciones') ? 'active' : '' ?>">
-                <i class="bi bi-receipt-cutoff me-2"></i> Tratamientos
-            </a>
-        </li>
-        <!-- <li class="nav-item">
-            <a href="historial_clinico.php" class="nav-link <?= ($page_name == 'Historiales Clínicos') ? 'active' : '' ?>">
-                <i class="bi bi-prescription2 me-2"></i> Historiales Clínicos
-            </a>
-        </li> -->
-        <li class="nav-item">
-            <a href="resultados_labs.php" class="nav-link <?= ($page_name == 'Resultados Labs') ? 'active' : '' ?>">
-                <i class="bi bi-file-medical-fill me-2"></i> Resultados Labs
-            </a>
-        </li>
-    </ul>
-    <hr class="text-white-50">
-    <div class="dropdown">
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://via.placeholder.com/32/333/fff?text=DR" alt="Doctor" width="32" height="32" class="rounded-circle me-2 border border-white">
-            <strong>Dra. Ana Trini</strong>
-        </a>
-        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" href="./perfil.php">Mi Perfil</a></li>
-            <li> <hr class="dropdown-divider"> </li>
-            <li>
-                <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#modalLogout">
-                    <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
-                </a>
-            </li>
-        </ul>
-    </div>
-
-</div>
-
-
-<!-- modal de Cerrar Sesión -->
-<div class="modal fade" id="modalLogout" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" style="max-width: 350px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.8rem;"></button>
-            </div>
-
-            <div class="modal-body text-center pb-2">
-                <div class="icon-container">
-                    <i class="bi bi-door-open-fill"></i>
-                </div>
-
-                <h5 class="modal-title-custom">¿Finalizar Sesión?</h5>
-                <p class="modal-text-custom">
-                    Estás a punto de salir del sistema. Asegúrate de haber guardado tus cambios.
-                </p>
-            </div>
-
-            <div class="modal-footer border-0 p-4 pt-2 d-flex flex-column gap-2">
-                <a href="../php/cerrar_sesion.php" class="btn btn-logout-confirm w-100 py-2 shadow-sm">
-                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
-                </a>
-                <button type="button" class="btn btn-link btn-stay text-decoration-none small" data-bs-dismiss="modal">
-                    Seguir trabajando
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="main-content"></div>
