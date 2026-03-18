@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include_once '../php/auth.php';
 
+$id_usuario_sesion = $_SESSION['id_usuario'] ?? 0;
+
 // 1. Obtener y validar el ID del paciente
 $paciente_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -212,9 +214,3 @@ include '../componentes/header_usuario.php';
 
     </div>
 </body>
-
-
-
-
-
-<?php include_once '../componentes/footer_usuario.php'; ?>

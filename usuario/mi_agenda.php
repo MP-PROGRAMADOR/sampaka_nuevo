@@ -31,20 +31,21 @@ try {
         echo "<div class='alert alert-warning m-4'>Atención: Tu usuario (ID: {$_SESSION['id_usuario']}) no tiene un ID de Personal vinculado. Revisa la tabla 'usuarios'.</div>";
     }
 
-    // 3. Consulta de hoy (Simplificada para asegurar que traiga datos)
+    // 3. Consulta de hoy
     $sql_hoy = "SELECT c.id_consulta as id, 
-                       DATE_FORMAT(c.fecha_consulta, '%H:%i') as hora, 
-                       CONCAT(p.nombre, ' ', p.apellido) as paciente, 
-                       c.motivo, 
-                       c.tipo_consulta as estado 
-                FROM consultas c
-                INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
-                WHERE c.id_medico = :id_m 
-                AND DATE(c.fecha_consulta) = CURDATE()
-                ORDER BY c.fecha_consulta ASC";
+                   DATE_FORMAT(c.fecha_consulta, '%H:%i') as hora, 
+                   CONCAT(p.nombre, ' ', p.apellido) as paciente, 
+                   c.motivo, 
+                   c.tipo_consulta as estado 
+            FROM consultas c
+            INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
+            WHERE c.id_usuario = :id_u  -- CAMBIADO DE id_medico A id_usuario
+            AND DATE(c.fecha_consulta) = CURDATE()
+            ORDER BY c.fecha_consulta ASC";
 
     $stmt = $pdo->prepare($sql_hoy);
-    $stmt->execute([':id_m' => $id_medico]);
+    // Usamos el ID de la sesión directamente para asegurar coincidencia con el dashboard
+    $stmt->execute([':id_u' => $id_usuario_sesion]);
     $res_hoy = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $citas_hoy = [];
     foreach ($res_hoy as $r) {
@@ -64,24 +65,23 @@ try {
             'color' => $color
         ];
     }
-
-    // 4. CARGAR CITAS DE LA PRÓXIMA SEMANA (Excluyendo hoy)
+    // 4. CARGAR CITAS DE LA PRÓXIMA SEMANA
     $sql_semana = "SELECT c.id_consulta as id, 
-                          DATE_FORMAT(c.fecha_consulta, '%d/%m/%Y') as dia, 
-                          DATE_FORMAT(c.fecha_consulta, '%H:%i') as hora, 
-                          CONCAT(p.nombre, ' ', p.apellido) as paciente, 
-                          c.motivo,
-                          c.tipo_consulta as estado 
-                   FROM consultas c
-                   INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
-                   WHERE c.id_medico = :id_m 
-                   AND DATE(c.fecha_consulta) > CURDATE() 
-                   AND DATE(c.fecha_consulta) <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
-                   ORDER BY c.fecha_consulta ASC";
+                      DATE_FORMAT(c.fecha_consulta, '%d/%m/%Y') as dia, 
+                      DATE_FORMAT(c.fecha_consulta, '%H:%i') as hora, 
+                      CONCAT(p.nombre, ' ', p.apellido) as paciente, 
+                      c.motivo,
+                      c.tipo_consulta as estado 
+               FROM consultas c
+               INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
+               WHERE c.id_usuario = :id_u -- CAMBIADO DE id_medico A id_usuario
+               AND DATE(c.fecha_consulta) > CURDATE() 
+               AND DATE(c.fecha_consulta) <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+               ORDER BY c.fecha_consulta ASC";
 
     $stmt = $pdo->prepare($sql_semana);
-    $stmt->execute([':id_m' => $id_medico]);
-    $res_semana = $stmt->fetchAll();
+    $stmt->execute([':id_u' => $id_usuario_sesion]);
+    $res_semana = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $citas_proxima_semana = [];
     foreach ($res_semana as $r) {
@@ -191,7 +191,7 @@ try {
                 <!-- Proxima Semana -->
                 <div class="tab-pane fade" id="semana" role="tabpanel">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
+                        <table class="table table-hover align-middle w-100">
                             <thead class="table-light">
                                 <tr>
                                     <th>Día</th>
@@ -312,54 +312,6 @@ try {
         </div>
     </div>
 
-
-
-
-    <script>
-        // Buscador de Pacientes en el modal de citas
-        document.getElementById('buscarPacienteCita').addEventListener('input', function() {
-            let query = this.value;
-            let resultados = document.getElementById('resultadosPacientes');
-
-            if (query.length > 2) {
-                fetch(`buscar_pacientes_ajax.php?q=${query}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        let html = '';
-                        if (data.length > 0) {
-                            data.forEach(p => {
-                                html += `
-                        <button type="button" class="list-group-item list-group-item-action py-2" 
-                                onclick="seleccionarPacienteCita(${p.id_paciente}, '${p.nombre} ${p.apellido}')">
-                            <i class="bi bi-person me-2"></i> ${p.nombre} ${p.apellido}
-                            <small class="text-muted d-block" style="font-size:0.75rem;">Código: ${p.codigo}</small>
-                        </button>`;
-                            });
-                        } else {
-                            html = '<div class="list-group-item text-muted">No se encontraron resultados</div>';
-                        }
-                        resultados.innerHTML = html;
-                    });
-            } else {
-                resultados.innerHTML = '';
-            }
-        });
-
-        function seleccionarPacienteCita(id, nombre) {
-            document.getElementById('id_paciente_input').value = id;
-            document.getElementById('nombrePacienteLabel').textContent = nombre;
-            document.getElementById('pacienteSeleccionado').classList.remove('d-none');
-            document.getElementById('buscarPacienteCita').parentElement.classList.add('d-none');
-            document.getElementById('resultadosPacientes').innerHTML = '';
-        }
-
-        document.getElementById('btnQuitarPaciente').addEventListener('click', function() {
-            document.getElementById('pacienteSeleccionado').classList.add('d-none');
-            document.getElementById('buscarPacienteCita').parentElement.classList.remove('d-none');
-            document.getElementById('id_paciente_input').value = '';
-            document.getElementById('buscarPacienteCita').value = '';
-        });
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Gráfico dinámico

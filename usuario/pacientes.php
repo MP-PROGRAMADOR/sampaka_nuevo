@@ -84,8 +84,8 @@ try {
                                     </div>
                                 </td>
                                 <td class="text-center ">
-                                    <a href="historial_clinico.php?id=<?= $p['id_paciente'] ?>" class="btn-action-row btn-edit btn btn-primary " title="Historial">
-                                        <i class="bi bi-clipboard2-pulse"></i>
+                                    <a href="historial_clinico.php?id=<?= $p['id_paciente'] ?>" class="btn-action-row btn-edit btn btn-sm btn-primary " title="Historial">
+                                        <i class="bi bi-clipboard2-pulse"></i> Historial
                                     </a>
                                 </td>
                             </tr>

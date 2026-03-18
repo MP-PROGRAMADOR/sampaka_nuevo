@@ -13,7 +13,7 @@ $id_usuario_sesion = $_SESSION['id_usuario'];
 
 // 3. LÓGICA DE CARGA DESDE BASE DE DATOS
 try {
-  
+
     function obtener_analiticas_reales($pdo, $id_u, $estado_filtro)
     {
         $sql = "SELECT 
@@ -78,13 +78,13 @@ try {
             </ul>
 
             <div class="tab-content" id="labsTabsContent">
-
+                <!-- Atendidos -->
                 <div class="tab-pane fade show active" id="pendientes" role="tabpanel">
                     <?php if (empty($pendientes)): ?>
                         <div class="alert alert-light text-center mt-3 border">No hay resultados pendientes.</div>
                     <?php else: ?>
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover align-middle">
+                            <table id="tablaPacientes" class="table table-striped table-hover align-middle">
                                 <thead class="table-warning text-white">
                                     <tr>
                                         <th>Paciente</th>
@@ -122,13 +122,13 @@ try {
                         </div>
                     <?php endif; ?>
                 </div>
-
+                <!-- Pendientes -->
                 <div class="tab-pane fade" id="revisados" role="tabpanel">
                     <?php if (empty($revisados)): ?>
                         <div class="alert alert-light text-center mt-3 border">No hay analíticas marcadas como entregadas.</div>
                     <?php else: ?>
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover align-middle">
+                            <table id="tablaPacientes" class="table table-striped table-hover align-middle w-100">
                                 <thead class="table-success">
                                     <tr>
                                         <th>Paciente</th>
