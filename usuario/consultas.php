@@ -34,15 +34,6 @@ $page_name = 'Consultas';
 
 
 
-        <?php if ($usuario_rol !== 'General'): ?>
-            <div class="d-flex justify-content-end mb-3">
-                <button class="btn btn-primary btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#modalEvaluarPaciente">
-                    <i class="bi bi-person-plus-fill me-2"></i> Evaluar al Paciente
-                </button>
-            </div>
-        <?php endif; ?>
-
-
         <!-- Tabla de COnsultas -->
         <div class="card p-4 shadow-sm">
             <div class="card-body">
@@ -62,54 +53,34 @@ $page_name = 'Consultas';
 
                 <div class="table-responsive">
                     <?php
-try {
-    // 1. Obtenemos el ID del usuario desde la sesión
-    $id_usuario_sesion = $_SESSION['id_usuario']; 
+                    try {
+                        // 1. Obtenemos el ID del usuario desde la sesión
+                        $id_usuario_sesion = $_SESSION['id_usuario'];
 
-    // 2. Preparamos la consulta SQL
-    $sql = "
-        SELECT 
-            c.id_consulta,
-            p.nombre AS paciente_nombre,
-            p.apellido AS paciente_apellido,
-            p.id_paciente AS id_paciente,
-            c.tipo_consulta,
-            c.motivo,
-            c.temperatura,
-            c.presion_arterial,
-            c.tension_arterial,
-            c.saturacion_oxigeno,
-            c.pulso,
-            c.peso,
-            c.talla,
-            c.IMC,
-            c.fecha_consulta,
-            c.pagado,
-            d.orina,
-            d.defeca,
-            d.horas_sueno,
-            d.antecedentes_familiares,
-            d.antecedentes_conyuge,
-            d.alergias,
-            d.operaciones,
-            d.transfuciones
-        FROM consultas c
-        INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
-        LEFT JOIN detalle_consulta d ON c.id_consulta = d.id_consulta
-        WHERE c.id_usuario = :id_usuario  -- Filtra estrictamente por tu ID
-        ORDER BY c.fecha_consulta DESC
-    ";
+                        // 2. Preparamos la consulta SQL
+                        $sql = "
+                        SELECT 
+                            c.id_consulta,
+                            p.nombre AS paciente_nombre, p.apellido AS paciente_apellido, p.id_paciente AS id_paciente, c.tipo_consulta, 
+                            c.motivo, c.temperatura, c.presion_arterial, c.tension_arterial, c.saturacion_oxigeno,
+                            c.pulso, c.peso, c.talla, c.IMC, c.fecha_consulta, c.pagado, d.orina, d.defeca,
+                            d.horas_sueno, d.antecedentes_familiares, d.antecedentes_conyuge, d.alergias, d.operaciones, d.transfuciones
+                        FROM consultas c
+                        INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
+                        LEFT JOIN detalle_consulta d ON c.id_consulta = d.id_consulta
+                        WHERE c.id_usuario = :id_usuario  -- Filtra estrictamente por tu ID
+                        ORDER BY c.fecha_consulta DESC
+                    ";
 
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':id_usuario' => $id_usuario_sesion]);
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute([':id_usuario' => $id_usuario_sesion]);
 
-    $consultas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-} catch (PDOException $e) {
-    echo "<tr><td colspan='15' class='text-danger'>Error al obtener consultas: " . $e->getMessage() . "</td></tr>";
-    exit;
-}
-?>
+                        $consultas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    } catch (PDOException $e) {
+                        echo "<tr><td colspan='15' class='text-danger'>Error al obtener consultas: " . $e->getMessage() . "</td></tr>";
+                        exit;
+                    }
+                    ?>
 
 
                     <table id="tablaPacientes" class="table table-striped table-hover align-middle mb-0 nowrap" style="width:100%">

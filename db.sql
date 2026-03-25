@@ -341,3 +341,5 @@ CREATE TABLE logs (
     dispositivo Text,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
+
+
