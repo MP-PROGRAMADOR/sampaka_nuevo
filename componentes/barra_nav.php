@@ -9,7 +9,7 @@
                 <span class="d-none d-md-inline"><?php echo htmlspecialchars($nombre_usuario); ?></span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                <li><a class="dropdown-item" href="../administrador/perfil.php">Perfil</a></li>
                 <!-- Botón para abrir el modal -->
                 <li>
                     <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">

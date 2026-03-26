@@ -30,12 +30,13 @@ try {
 
         <div id="content" class="p-4 bg-gray-100 flex-grow">
 
+            <?php include_once '../componentes/barra_nav.php'; ?>
+
             <div class="table-responsive">
 
                 <div class="card shadow-sm rounded-xl">
                     <div class="card-body">
 
-                        <?php include_once '../componentes/barra_nav.php'; ?>
                         <?php if (isset($_SESSION['success'])): ?>
                             <div class="alert alert-success fade-msg"><?= htmlspecialchars($_SESSION['success']); ?></div>
                             <?php unset($_SESSION['success']); ?>

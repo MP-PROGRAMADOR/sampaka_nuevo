@@ -6,7 +6,7 @@ if (!isset($_SESSION['id_usuario'])) {
     exit();
 }
 
-$tiempo_inactividad = 300; // 5 minutos
+$tiempo_inactividad = 1800; // 5 minutos
 if (isset($_SESSION['ultimo_movimiento'])) {
     $tiempo_transcurrido = time() - $_SESSION['ultimo_movimiento'];
 
